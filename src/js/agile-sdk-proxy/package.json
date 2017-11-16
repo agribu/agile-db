@@ -1,0 +1,17 @@
+{
+  "name": "agile-sdk-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "agile-sdk-proxy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "agile-sdk": "file:../agile-sdk",
+    "fs": "0.0.1-security",
+    "json-stringify": "^1.0.0"
+  }
+}
