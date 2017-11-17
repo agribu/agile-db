@@ -8,7 +8,7 @@ const agile = require('agile-sdk')({
     api: 'http://localhost:8080',
     idm: 'http://localhost:3000',
     data: 'http://localhost:1338',
-    token: "kl9PkkTCanr05c72ProQCcKVbGVUv9LgwNooPofy8STisEKWygU64juNUhxHHI0Y"
+    token: "0p4J2UuCAWjQPkcBbfPscz2QhfUt8nmnGN0XlZwlCuaMbX5CLmKkcSCajweVzKXW"
 });
 
 /**
@@ -21,6 +21,10 @@ const agile = require('agile-sdk')({
  * @returns {Object} - formatted json object
  */
 function pretty(obj) {
+    return stringify(obj, null, 2);
+}
+
+exports.pretty = function(obj) {
     return stringify(obj, null, 2);
 }
 
@@ -62,6 +66,12 @@ exports.getEntityByType = function(type) {
 
 exports.getEntityByAttributeValue = function(attr, value) {
     agile.idm.entity.getByAttributeValue([{attributeType:attr,attributeValue:value}]).then(function(entities) {
+        console.log(entities);
+    });
+}
+
+exports.getEntityByMultiAttributeValue = function(policy) {
+    agile.idm.entity.getByAttributeValue(policy).then(function(entities) {
         console.log(entities);
     });
 }
@@ -137,7 +147,6 @@ exports.deleteGroup = function(ownerid, name) {
 }
 
 exports.groupAddEntity = function(ownerid, group, entityid, type) {
-    console.log('proxy: ' + ownerid + ', ' + group + ', ' + entityid + ', ' + type);
     agile.idm.group.addEntity({
         owner: ownerid,
         name: group,
@@ -172,5 +181,41 @@ exports.pdpEvaluate = function(entityid, type, attr, method) {
             method : method
         }]).then(function(results) {
             console.log(results);
+    });
+}
+
+/**
+ * #######################################
+ *  idm.pap functions
+ * #######################################
+ */
+exports.papGetPolicy = function(entityid, type, attr) {
+    agile.policies.pap.get({
+        entityId : entityid,
+        entityType: type,
+        field : attr
+    }).then(function(results) {
+        console.log(pretty(results));
+    });
+}
+
+exports.papSetPolicy = function(entityid, type, attr, policy) {
+    agile.policies.pap.set({
+        entityId : entityid,
+        entityType: type,
+        field : attr,
+        policy : policy
+    }).then(function(results) {
+        console.log(pretty(results));
+    });
+}
+
+exports.papDeletePolicy = function(entityid, type, attr) {
+    agile.policies.pap.delete({
+        entityId : entityid,
+        entityType: type,
+        field : attr
+    }).then(function(results) {
+        console.log(pretty(results));
     });
 }

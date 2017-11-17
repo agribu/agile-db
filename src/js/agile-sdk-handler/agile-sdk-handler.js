@@ -5,6 +5,7 @@
 const fs = require("fs");
 const argv = require('yargs').argv;
 const proxy = require('agile-sdk-proxy');
+const qs = require('querystring');
 
 const project_dir = "../../../";
 var db_conf = project_dir + "conf/db_conf.json";
@@ -63,6 +64,12 @@ function inputHandler() {
         if (typeof argv.attr === 'string') { attr = argv.attr; }
         if (typeof argv.value === 'string') { value = argv.value; }
         proxy.getEntityByAttributeValue(attr, value);
+    }
+
+    if (argv.getEntityByMultiAttributeValue) {
+        var policy;
+        if (typeof argv.policy === 'string') { policy = argv.policy; }
+        proxy.getEntityByMultiAttributeValue(JSON.parse(policy));
     }
 
     if (argv.getEntity) {
@@ -177,22 +184,56 @@ function inputHandler() {
         proxy.pdpEvaluate(entityid, type, attr, method);
     }
 
+    /**
+     * #######################################
+     *  idm.pap functions
+     * #######################################
+     */
+    if (argv.papGetPolicy) {
+        var entityid, type, attr;
+        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        if (typeof argv.attr === 'string') { attr = argv.attr; }
+        proxy.papGetPolicy(entityid, type, attr);
+    }
+
+    if (argv.papSetPolicy) {
+        var entityid, type, attr, policy;
+        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        if (typeof argv.attr === 'string') { attr = argv.attr; }
+        if (typeof argv.policy === 'string') { policy = argv.policy; }
+        proxy.papSetPolicy(entityid, type, attr, JSON.parse(policy));
+    }
+
+    if (argv.papDeletePolicy) {
+        var entityid, type, attr;
+        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        if (typeof argv.attr === 'string') { attr = argv.attr; }
+        proxy.papDeletePolicy(entityid, type, attr);
+    }
 }
 
 inputHandler();
 
 /**
  * Test functions: database
- * node agile-sdk-handler.js --createDatabaseTable --id '0' --type 'db-column' --database 'db_test' --table 'table_test' --column 'column_test'
+ * node agile-sdk-handler.js --createDatabaseTable --id '0' --type 'db-table' --database 'db_test' --table 'table_test'
  * node agile-sdk-handler.js --createDatabaseColumn --id '0' --type 'db-column' --database 'db_test' --table 'table_test' --column 'column_test'
  *
  * Test functions: idm.entity
- * node agile-sdk-handler.js --getEntityByType --type="database"
- * node agile-sdk-handler.js --getEntityByAttributeValue --attr 'database' --value 'cdb_medical'
- * node agile-sdk-handler.js --getEntity --id 0 --type 'database'
- * node agile-sdk-handler.js --deleteEntity --id 0 --type 'database'
- * node agile-sdk-handler.js --setEntityAttribute --id 0 --type 'database' --attr user --value 'root'
- * node agile-sdk-handler.js --deleteEntityAttribute --id 0 --type 'database' --attr user
+ * node agile-sdk-handler.js --getEntityByType --type="db"
+ * node agile-sdk-handler.js --getEntityByAttributeValue --attr 'name' --value 'cdb_medical'
+ * node agile-sdk-handler.js --getEntityByMultiAttributeValue --policy '[ { "attributeType":"user", "attributeValue":"root"}, { "attributeType":"password", "attributeValue":"letmein" }]'
+ * node agile-sdk-handler.js --getEntity --id 0 --type 'db'
+ * node agile-sdk-handler.js --createEntity --id '0' --type 'db' --name 'db_test'
+ * node agile-sdk-handler.js --deleteEntity --id 0 --type 'db'
+ * node agile-sdk-handler.js --setEntityAttribute --id 0 --type 'db' --attr user --value 'root'
+ * node agile-sdk-handler.js --deleteEntityAttribute --id 0 --type 'db' --attr user
  * node agile-sdk-handler.js --getEntitiesSchema
  *
  * Test functions: idm.group
@@ -205,4 +246,10 @@ inputHandler();
  *
  * Test functions: idm.pdp
  * node agile-sdk-handler.js --pdpEvaluate --entityid 'agile!@!agile-local' --type 'user' --attr 'password' --method 'read'
+ *
+ * Test functions: idm.pap
+ * node agile-sdk-handler.js --papGetPolicy --entityid 'agile!@!agile-local' --type 'user' --attr 'password'
+ * node agile-sdk-handler.js --papSetPolicy --entityid '2' --type 'db' --attr 'user' --policy '[ { "op": "write", "locks": [ { "lock": "attrEq", "args": ["role", "test2"] } ] }, { "op": "read" } ]'
+ * node agile-sdk-handler.js --papDeletePolicy --entityid '2' --type 'db' --attr 'user'
  */
+// '[ { "user": "root", "password": "letmein" } ]'
