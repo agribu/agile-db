@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-
-from Naked.toolshed.shell import execute_js, muterun_js
 import subprocess, mysqlc, os
 
 agile = "../js/agile-sdk-handler/agile-sdk-handler"
@@ -64,8 +62,8 @@ def createAllColumns():
     for t in mysqlc.getTables():
         createColumns(t)
 
-mysqlc.readJSONFile("../../conf/db_conf.json")
-mysqlc.connect()
+# mysqlc.readJSONFile("../../conf/db_conf.json")
+# mysqlc.connect()
 # print(mysqlc.getTables()[0])
 # print(mysqlc.getDatabaseName())
 # print(mysqlc.getColumns("patient_data"))
@@ -74,10 +72,10 @@ mysqlc.connect()
 
 
 # print(run(agile + " --deleteEntity --id " + str(0) + " --type 'database'"))
-print(run(agile + " --getEntityByType --type 'db-column'"))
+# print(run(agile + " --getEntityByType --type 'db-column'"))
 
 # createDatabase()
 # createTables()
 # createAllColumns()
 
-mysqlc.terminate()
+# mysqlc.terminate()
