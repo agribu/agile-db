@@ -26,7 +26,6 @@ function inputHandler() {
      *  database functions extends idm.entity
      * #######################################
      */
-
     if (argv.createDatabaseTable) {
         var id, type, database, table;
         if (typeof argv.id === 'string') { id = argv.id; }
@@ -119,7 +118,6 @@ function inputHandler() {
      *  idm.group functions
      * #######################################
      */
-
     if (argv.getGroup) {
         var ownerid, group;
         if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
@@ -164,6 +162,21 @@ function inputHandler() {
         proxy.groupRemoveEntity(ownerid, group, entityid, type);
     }
 
+    /**
+     * #######################################
+     *  idm.pdp functions
+     * #######################################
+     */
+    if (argv.pdpEvaluate) {
+        var entityid, type, attr, method;
+        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        if (typeof argv.attr === 'string') { attr = argv.attr; }
+        if (typeof argv.method === 'string') { method = argv.method; }
+        proxy.pdpEvaluate(entityid, type, attr, method);
+    }
+
 }
 
 inputHandler();
@@ -189,4 +202,7 @@ inputHandler();
  * node agile-sdk-handler.js --deleteGroup --ownerid 'agile!@!agile-local' --name 'testgroup'
  * node agile-sdk-handler.js --groupAddEntity --ownerid 'agile!@!agile-local' --group 'testgroup' --entityid 'bob!@!agile-local' --type 'user'
  * node agile-sdk-handler.js --groupRemoveEntity --ownerid 'agile!@!agile-local' --group 'testgroup' --entityid 'bob!@!agile-local' --type 'user'
+ *
+ * Test functions: idm.pdp
+ * node agile-sdk-handler.js --pdpEvaluate --entityid 'agile!@!agile-local' --type 'user' --attr 'password' --method 'read'
  */

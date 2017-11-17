@@ -8,7 +8,7 @@ const agile = require('agile-sdk')({
     api: 'http://localhost:8080',
     idm: 'http://localhost:3000',
     data: 'http://localhost:1338',
-    token: "Pe63N9W3MjnGSkPUH4Uszf6wu3XuzBd2wwtrjCy6oMQoUVk687ggqaV4mJaNPETU"
+    token: "kl9PkkTCanr05c72ProQCcKVbGVUv9LgwNooPofy8STisEKWygU64juNUhxHHI0Y"
 });
 
 /**
@@ -16,7 +16,6 @@ const agile = require('agile-sdk')({
  *  helper functions
  * #######################################
  */
-
 /**
  * @param {Object} obj - json object
  * @returns {Object} - formatted json object
@@ -38,7 +37,6 @@ exports.configure = function(db) {
  *  database functions extends idm.entity
  * #######################################
  */
-
 exports.createDatabaseColumn = function(id, type, database, table,  column) {
     agile.idm.entity.create(id, type, {'database':database, 'table':table, 'column':column}).then(function(result) {
         console.log('Database column created!\n' + pretty(result));
@@ -158,5 +156,21 @@ exports.groupRemoveEntity = function(ownerid, group, entityid, type) {
         entityType: type
     }).then(function(updated) {
         console.log('Group updated!\n' + pretty(updated));
+    });
+}
+
+/**
+ * #######################################
+ *  idm.pdp functions
+ * #######################################
+ */
+exports.pdpEvaluate = function(entityid, type, attr, method) {
+    agile.policies.pdp.evaluate([{
+            entityId: entityid,
+            entityType: type,
+            field : attr,
+            method : method
+        }]).then(function(results) {
+            console.log(results);
     });
 }
