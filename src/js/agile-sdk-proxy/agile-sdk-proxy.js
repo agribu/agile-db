@@ -1,5 +1,5 @@
 /**
- * Documentation available: https://github.com/Agile-IoT/agile-sdk/blob/master/DOCUMENTATION.md
+ * Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-SDK-Proxy
  */
 
 const fs = require("fs");
