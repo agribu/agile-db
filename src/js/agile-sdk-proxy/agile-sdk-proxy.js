@@ -56,6 +56,23 @@ exports.createDatabaseTable = function(id, type, database, table) {
  *  idm.entity functions
  * #######################################
  */
+exports.getEntityByType = function(type) {
+    agile.idm.entity.getByType(type).then(function(entities) {
+        console.log(pretty(entities));
+    });
+}
+
+exports.getEntityByAttributeValue = function(attr, value) {
+    agile.idm.entity.getByAttributeValue([{attributeType:attr,attributeValue:value}]).then(function(entities) {
+        console.log(entities);
+    });
+}
+
+exports.getEntity = function(id, type) {
+	agile.idm.entity.get(id, type).then(function(result) {
+        console.log(pretty(result));
+	});
+}
 
 exports.createEntity = function(id, type, name) {
 	agile.idm.entity.create(id, type, {'name':name}).then(function(result) {
@@ -83,18 +100,6 @@ exports.setEntityAttribute = function(id, type, attr, value) {
 exports.deleteEntityAttribute = function(id, type, attr) {
 	agile.idm.entity.deleteAttribute(id, type, attr).then(function(result) {
         console.log('Entity updated!\n' + pretty(result));
-	});
-}
-
-exports.getEntity = function(id, type) {
-	agile.idm.entity.get(id, type).then(function(result) {
-        console.log(pretty(result));
-	});
-}
-
-exports.getEntityByType = function(type) {
-	agile.idm.entity.getByType(type).then(function(entities) {
-        console.log(pretty(entities));
 	});
 }
 
@@ -145,7 +150,7 @@ exports.groupAddEntity = function(ownerid, group, entityid, type) {
     });
 }
 
-exports.groupDelEntity = function(ownerid, group, entityid, type) {
+exports.groupRemoveEntity = function(ownerid, group, entityid, type) {
     agile.idm.group.removeEntity({
         owner: ownerid,
         name: group,

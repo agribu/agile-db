@@ -29,6 +29,7 @@ function inputHandler() {
 
     if (argv.createDatabaseTable) {
         var id, type, database, table;
+        if (typeof argv.id === 'string') { id = argv.id; }
         if (typeof argv.id === 'number') { id = argv.id.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.database === 'string') { database = argv.database; }
@@ -38,6 +39,7 @@ function inputHandler() {
 
     if (argv.createDatabaseColumn) {
         var id, type, database, table, column;
+        if (typeof argv.id === 'string') { id = argv.id; }
         if (typeof argv.id === 'number') { id = argv.id.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.database === 'string') { database = argv.database; }
@@ -51,9 +53,30 @@ function inputHandler() {
      *  idm.entity functions
      * #######################################
      */
+    if (argv.getEntityByType) {
+        var type;
+        if (typeof argv.type === 'string') { type = argv.type; }
+        proxy.getEntityByType(type);
+    }
+
+    if (argv.getEntityByAttributeValue) {
+        var attr, value;
+        if (typeof argv.attr === 'string') { attr = argv.attr; }
+        if (typeof argv.value === 'string') { value = argv.value; }
+        proxy.getEntityByAttributeValue(attr, value);
+    }
+
+    if (argv.getEntity) {
+        var id, type;
+        if (typeof argv.id === 'string') { id = argv.id; }
+        if (typeof argv.id === 'number') { id = argv.id.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        proxy.getEntity(id, type);
+    }
 
     if (argv.createEntity) {
         var id, type, name;
+        if (typeof argv.id === 'string') { id = argv.id; }
         if (typeof argv.id === 'number') { id = argv.id.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.name === 'string') { name = argv.name; }
@@ -62,6 +85,7 @@ function inputHandler() {
 
     if (argv.deleteEntity) {
         var id, type;
+        if (typeof argv.id === 'string') { id = argv.id; }
         if (typeof argv.id === 'number') { id = argv.id.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         proxy.deleteEntity(id, type);
@@ -69,6 +93,7 @@ function inputHandler() {
 
     if (argv.setEntityAttribute) {
         var id, type, attr, value;
+        if (typeof argv.id === 'string') { id = argv.id; }
         if (typeof argv.id === 'number') { id = argv.id.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.attr === 'string') { attr = argv.attr; }
@@ -78,23 +103,15 @@ function inputHandler() {
 
     if (argv.deleteEntityAttribute) {
         var id, type, attr;
+        if (typeof argv.id === 'string') { id = argv.id; }
         if (typeof argv.id === 'number') { id = argv.id.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.attr === 'string') { attr = argv.attr; }
         proxy.deleteEntityAttribute(id, type, attr);
     }
 
-    if (argv.getEntity) {
-        var id, type;
-        if (typeof argv.id === 'number') { id = argv.id.toString(); }
-        if (typeof argv.type === 'string') { type = argv.type; }
-        proxy.getEntity(id, type);
-    }
-
-    if (argv.getEntityByType) {
-        var type;
-        if (typeof argv.type === 'string') { type = argv.type; }
-        proxy.getEntityByType(type);
+    if (argv.getEntitiesSchema) {
+        proxy.getEntitiesSchema();
     }
 
     /**
@@ -132,17 +149,19 @@ function inputHandler() {
         if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
         if (typeof argv.group === 'string') { group = argv.group; }
         if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         proxy.groupAddEntity(ownerid, group, entityid, type);
     }
 
-    if (argv.groupDelEntity) {
+    if (argv.groupRemoveEntity) {
         var ownerid, group, entityid, type;
         if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
         if (typeof argv.group === 'string') { group = argv.group; }
         if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
-        proxy.groupDelEntity(ownerid, group, entityid, type);
+        proxy.groupRemoveEntity(ownerid, group, entityid, type);
     }
 
 }
@@ -155,13 +174,13 @@ inputHandler();
  * node agile-sdk-handler.js --createDatabaseColumn --id '0' --type 'db-column' --database 'db_test' --table 'table_test' --column 'column_test'
  *
  * Test functions: idm.entity
- * node agile-sdk-handler.js --createEntity --id 0 --type 'database' --name 'db_test' (check first if id is not used)
- * node agile-sdk-handler.js --deleteEntity --id 0 --type 'database'
  * node agile-sdk-handler.js --getEntityByType --type="database"
- * node agile-sdk-handler.js --setEntityAttribute --id 0 --type 'database' --attr user --value 'root'
- * node agile-sdk-handler.js --deleteEntityAttribute --id 0 --type 'database' --attr addres
+ * node agile-sdk-handler.js --getEntityByAttributeValue --attr 'database' --value 'cdb_medical'
  * node agile-sdk-handler.js --getEntity --id 0 --type 'database'
- * node agile-sdk-handler.js --getEntityByType --type 'database'
+ * node agile-sdk-handler.js --deleteEntity --id 0 --type 'database'
+ * node agile-sdk-handler.js --setEntityAttribute --id 0 --type 'database' --attr user --value 'root'
+ * node agile-sdk-handler.js --deleteEntityAttribute --id 0 --type 'database' --attr user
+ * node agile-sdk-handler.js --getEntitiesSchema
  *
  * Test functions: idm.group
  * node agile-sdk-handler.js --getGroup --ownerid 'agile!@!agile-local' --group 'testgroup'
@@ -169,5 +188,5 @@ inputHandler();
  * node agile-sdk-handler.js --createGroup --name 'testgroup'
  * node agile-sdk-handler.js --deleteGroup --ownerid 'agile!@!agile-local' --name 'testgroup'
  * node agile-sdk-handler.js --groupAddEntity --ownerid 'agile!@!agile-local' --group 'testgroup' --entityid 'bob!@!agile-local' --type 'user'
- * node agile-sdk-handler.js --groupDelEntity --ownerid 'agile!@!agile-local' --group 'testgroup' --entityid 'bob!@!agile-local' --type 'user'
+ * node agile-sdk-handler.js --groupRemoveEntity --ownerid 'agile!@!agile-local' --group 'testgroup' --entityid 'bob!@!agile-local' --type 'user'
  */
