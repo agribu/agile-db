@@ -67,9 +67,9 @@ function inputHandler() {
     }
 
     if (argv.getEntityByMultiAttributeValue) {
-        var policy;
-        if (typeof argv.policy === 'string') { policy = argv.policy; }
-        proxy.getEntityByMultiAttributeValue(JSON.parse(policy));
+        var constraints;
+        if (typeof argv.constraints === 'string') { policy = argv.constraints; }
+        proxy.getEntityByMultiAttributeValue(JSON.parse(constraints));
     }
 
     if (argv.getEntity) {
@@ -228,7 +228,7 @@ inputHandler();
  * Test functions: idm.entity
  * node agile-sdk-handler.js --getEntityByType --type="db"
  * node agile-sdk-handler.js --getEntityByAttributeValue --attr 'name' --value 'cdb_medical'
- * node agile-sdk-handler.js --getEntityByMultiAttributeValue --policy '[ { "attributeType":"user", "attributeValue":"root"}, { "attributeType":"password", "attributeValue":"letmein" }]'
+ * node agile-sdk-handler.js --getEntityByMultiAttributeValue --constraints '[ { "attributeType":"user", "attributeValue":"root"}, { "attributeType":"password", "attributeValue":"letmein" }]'
  * node agile-sdk-handler.js --getEntity --id 0 --type 'db'
  * node agile-sdk-handler.js --createEntity --id '0' --type 'db' --name 'db_test'
  * node agile-sdk-handler.js --deleteEntity --id 0 --type 'db'
