@@ -4,11 +4,7 @@
 
 const fs = require("fs");
 const argv = require('yargs').argv;
-const qs = require('querystring');
 var proxy;
-
-const project_dir = "../../../";
-var db_conf = project_dir + "conf/db_conf.json";
 
 function inputHandler() {
     /**
