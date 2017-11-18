@@ -4,24 +4,13 @@
 
 const fs = require("fs");
 const argv = require('yargs').argv;
-const proxy = require('agile-sdk-proxy');
 const qs = require('querystring');
+var proxy;
 
 const project_dir = "../../../";
 var db_conf = project_dir + "conf/db_conf.json";
 
 function inputHandler() {
-
-    /**
-     * #######################################
-     *  helper functions
-     * #######################################
-     */
-    if (typeof argv.conf === 'string') {
-        db_conf = project_dir + argv.conf;
-        proxy.configure(db_conf);
-    }
-
     /**
      * #######################################
      *  database functions extends idm.entity
@@ -68,8 +57,14 @@ function inputHandler() {
 
     if (argv.getEntityByMultiAttributeValue) {
         var constraints;
-        if (typeof argv.constraints === 'string') { policy = argv.constraints; }
-        proxy.getEntityByMultiAttributeValue(JSON.parse(constraints));
+        if (typeof argv.constraints) {
+            if (typeof argv.file === 'string') {
+                constraints = JSON.parse(fs.readFileSync(argv.file));
+            } else if (typeof argv.constraints === 'string') {
+                constraints = JSON.parse(argv.constraints);
+            }
+        }
+        proxy.getEntityByMultiAttributeValue(constraints);
     }
 
     if (argv.getEntity) {
@@ -204,8 +199,14 @@ function inputHandler() {
         if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.attr === 'string') { attr = argv.attr; }
-        if (typeof argv.policy === 'string') { policy = argv.policy; }
-        proxy.papSetPolicy(entityid, type, attr, JSON.parse(policy));
+        if (typeof argv.policy) {
+            if (typeof argv.file === 'string') {
+                policy = JSON.parse(fs.readFileSync(argv.file));
+            } else if (typeof argv.policy === 'string') {
+                policy = JSON.parse(argv.policy);
+            }
+        }
+        proxy.papSetPolicy(entityid, type, attr, policy);
     }
 
     if (argv.papDeletePolicy) {
@@ -218,4 +219,19 @@ function inputHandler() {
     }
 }
 
+function init() {
+    /**
+     * #######################################
+     *  helper function
+     * #######################################
+     */
+    if (typeof argv.conf === 'string') {
+        var agile_conf = argv.conf;
+        var config = JSON.parse(fs.readFileSync(agile_conf));
+        var Proxy = require('agile-sdk-proxy');
+        proxy = new Proxy(config);
+    }
+}
+
+init();
 inputHandler();
