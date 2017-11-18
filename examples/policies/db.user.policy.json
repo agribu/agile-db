@@ -1,0 +1,12 @@
+[
+    {
+        "op": "read",
+        "locks": [{
+            "lock": "attrEq",
+            "args": ["role", "test"]
+            }]
+    },
+    {
+        "op": "write"
+    }
+]
