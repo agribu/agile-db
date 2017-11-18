@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# Documentation available: https://github.com/agribu/agile-db/wiki/SQL-Operations
 import pymysql, json, re, argparse
 
 # Database connection
@@ -8,6 +9,9 @@ cur = None
 # Configuration file
 config = None
 
+# ##################################### #
+#  main function                        #
+# ##################################### #
 def main():
     global inputfile
     parser = argparse.ArgumentParser(description='This script executes operations on a configured database.')
@@ -39,12 +43,22 @@ def main():
 
         terminate()
 
+# ##################################### #
+#  helper functions                     #
+# ##################################### #
 def readJSONFile(inputfile):
     global config
     # Read configuration file
     with open(inputfile) as json_data_file:
         config = json.load(json_data_file)
 
+def setConfig(conf):
+    global config
+    config = conf
+
+# ##################################### #
+#  connection functions                 #
+# ##################################### #
 def connect():
     global conn, cur, config
     conn = pymysql.connect(
@@ -61,6 +75,9 @@ def terminate():
     cur.close()
     conn.close()
 
+# ##################################### #
+#  database functions                   #
+# ##################################### #
 def getDatabaseName():
     global config
     return str(config["database"])
@@ -87,6 +104,9 @@ def executeQuery(query):
     cur.execute(query)
     return cur.fetchall()
 
+# ##################################### #
+#  export functions                     #
+# ##################################### #
 def getJSONStructure():
     global conn, cur, config
     database = []
@@ -116,12 +136,8 @@ def getJSONStructure():
 
     return json_data
 
-#connect()
-#print(getJSONStructure())
-#print(getTables())
-#print(getColumns("patient_data"))
-#print(executeQuery("select * from Persons"))
-#terminate()
-
+# ##################################### #
+#  start                                #
+# ##################################### #
 if __name__ == "__main__":
    main()
