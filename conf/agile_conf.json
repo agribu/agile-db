@@ -1,8 +1,6 @@
 {
-    "protocol": "http",
-    "host": "localhost",
-    "api": "8000",
-    "idm": "3000",
-    "data": "1338",
-    "token": "c38A9FAD0fWwl5dDY8p5Y2kM0H91sGgVfBsbx9SsLeWae9oEfJgaEfNV8Z2HrnUO"
+	"api":"http://localhost:8080",
+	"idm":"http://localhost:3000",
+	"data":"http://localhost:1338",
+	"token":"KgaVfZJxfxZKBCoHVCThYZq550gR6cWINQR09IgIzBHjcrJcVr08posPDAGkCacf"
 }
