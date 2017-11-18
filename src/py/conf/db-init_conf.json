@@ -1,0 +1,5 @@
+{
+    "agile-sdk-handler": "../js/agile-sdk-handler/agile-sdk-handler",
+    "agile_conf": "../../conf/agile_conf.json",
+    "db_conf": "../../conf/db_conf.json"
+}
