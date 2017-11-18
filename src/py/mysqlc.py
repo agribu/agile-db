@@ -80,7 +80,7 @@ def terminate():
 # ##################################### #
 def getDatabaseName():
     global config
-    return str(config["database"])
+    return str(config["name"])
 
 def getTables():
     global conn, cur
@@ -116,7 +116,7 @@ def getJSONStructure():
     basic.append({"db_host":config["host"]})
     basic.append({"db_port":config["port"]})
     basic.append({"db_user":config["user"]})
-    basic.append({"db_name":config["database"]})
+    basic.append({"db_name":config["name"]})
 
     for t in getTables():
         name = t
