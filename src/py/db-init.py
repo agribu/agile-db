@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import subprocess, mysqlc, os
+import mysqlc, os
 
 agile = "../js/agile-sdk-handler/agile-sdk-handler"
 db_ctr = 0
