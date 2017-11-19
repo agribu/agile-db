@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Documentation available: https://github.com/agribu/agile-db/wiki/Database-Initialization
+# Documentation available: https://github.com/agribu/agile-db/wiki/Database-Operations
 import mysqlc, os, re, json, argparse
 
 # Main configuration file
