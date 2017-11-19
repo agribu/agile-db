@@ -9,6 +9,102 @@ var proxy;
 function inputHandler() {
     /**
      * #######################################
+     *  idm.group functions
+     * #######################################
+     */
+    if (argv.getGroup) {
+        var ownerid, group;
+        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
+        if (typeof argv.group === 'string') { name = argv.group; }
+        proxy.getGroup(ownerid, group);
+    }
+
+    if (argv.getAllGroups) {
+        proxy.getAllGroups();
+    }
+
+    if (argv.createGroup) {
+        var name;
+        if (typeof argv.name === 'string') { name = argv.name; }
+        proxy.createGroup(name);
+    }
+
+    if (argv.deleteGroup) {
+        var ownerid, name;
+        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
+        if (typeof argv.name === 'string') { name = argv.name; }
+        proxy.deleteGroup(ownerid, name);
+    }
+
+    if (argv.groupAddEntity) {
+        var ownerid, group, entityid, type;
+        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
+        if (typeof argv.group === 'string') { group = argv.group; }
+        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        proxy.groupAddEntity(ownerid, group, entityid, type);
+    }
+
+    if (argv.groupRemoveEntity) {
+        var ownerid, group, entityid, type;
+        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
+        if (typeof argv.group === 'string') { group = argv.group; }
+        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
+        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
+        if (typeof argv.type === 'string') { type = argv.type; }
+        proxy.groupRemoveEntity(ownerid, group, entityid, type);
+    }
+
+    /**
+     * #######################################
+     *  user functions
+     * #######################################
+     */
+    if (argv.getCurrentUserInfo) {
+        proxy.getCurrentUserInfo();
+    }
+
+    if (argv.getUser) {
+        var username, authtype;
+        if (typeof argv.username === 'string') { username = argv.username; }
+        if (typeof argv.authtype === 'string') { authtype = argv.authtype; }
+        proxy.getUser(username, authtype);
+    }
+
+    if (argv.createUser) {
+        var username, authtype, role, password;
+        if (typeof argv.username === 'string') { username = argv.username; }
+        if (typeof argv.authtype === 'string') { authtype = argv.authtype; }
+        if (typeof argv.role === 'string') { role = argv.role; }
+        if (typeof argv.password === 'string') { password = argv.password; }
+        proxy.createUser(username, authtype, role, password);
+    }
+
+    if (argv.deleteUser) {
+        var username, authtype;
+        if (typeof argv.username === 'string') { username = argv.username; }
+        if (typeof argv.authtype === 'string') { authtype = argv.authtype; }
+        proxy.deleteUser(username, authtype);
+    }
+
+    if (argv.resetUserPassword) {
+        var username, authtype, password;
+        if (typeof argv.username === 'string') { username = argv.username; }
+        if (typeof argv.authtype === 'string') { authtype = argv.authtype; }
+        if (typeof argv.password === 'string') { password = argv.password; }
+        proxy.resetUserPassword(username, authtype, password);
+    }
+
+    if (argv.updateUserPassword) {
+        var oldPassword, newPassword;
+        if (typeof argv.oldPassword === 'string') { oldPassword = argv.oldPassword; }
+        if (typeof argv.newPassword === 'string') { newPassword = argv.newPassword; }
+        proxy.updateUserPassword(oldPassword, newPassword);
+    }
+
+    /**
+     * #######################################
      *  database functions extends idm.entity
      * #######################################
      */
@@ -109,55 +205,6 @@ function inputHandler() {
 
     if (argv.getEntitiesSchema) {
         proxy.getEntitiesSchema();
-    }
-
-    /**
-     * #######################################
-     *  idm.group functions
-     * #######################################
-     */
-    if (argv.getGroup) {
-        var ownerid, group;
-        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
-        if (typeof argv.group === 'string') { name = argv.group; }
-        proxy.getGroup(ownerid, group);
-    }
-
-    if (argv.getAllGroups) {
-        proxy.getAllGroups();
-    }
-
-    if (argv.createGroup) {
-        var name;
-        if (typeof argv.name === 'string') { name = argv.name; }
-        proxy.createGroup(name);
-    }
-
-    if (argv.deleteGroup) {
-        var ownerid, name;
-        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
-        if (typeof argv.name === 'string') { name = argv.name; }
-        proxy.deleteGroup(ownerid, name);
-    }
-
-    if (argv.groupAddEntity) {
-        var ownerid, group, entityid, type;
-        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
-        if (typeof argv.group === 'string') { group = argv.group; }
-        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
-        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
-        if (typeof argv.type === 'string') { type = argv.type; }
-        proxy.groupAddEntity(ownerid, group, entityid, type);
-    }
-
-    if (argv.groupRemoveEntity) {
-        var ownerid, group, entityid, type;
-        if (typeof argv.ownerid === 'string') { ownerid = argv.ownerid; }
-        if (typeof argv.group === 'string') { group = argv.group; }
-        if (typeof argv.entityid === 'string') { entityid = argv.entityid; }
-        if (typeof argv.entityid === 'number') { entityid = argv.entityid.toString(); }
-        if (typeof argv.type === 'string') { type = argv.type; }
-        proxy.groupRemoveEntity(ownerid, group, entityid, type);
     }
 
     /**

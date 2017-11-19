@@ -23,6 +23,99 @@ function pretty(obj) {
 
 /**
  * #######################################
+ *  idm.group functions
+ * #######################################
+ */
+Proxy.prototype.getGroup = function(ownerid, group) {
+    agile.idm.group.get(ownerid, group).then(function(result) {
+        console.log(pretty(result));
+    });
+}
+
+Proxy.prototype.getAllGroups = function() {
+    agile.idm.group.get().then(function(groups) {
+        console.log(pretty(groups));
+    });
+}
+
+Proxy.prototype.createGroup = function(name) {
+    agile.idm.group.create(name).then(function(group) {
+        console.log(pretty(group));
+    });
+}
+
+Proxy.prototype.deleteGroup = function(ownerid, name) {
+    agile.idm.group.delete(ownerid, name).then(function() {
+        console.log('Group removed!');
+    });
+}
+
+Proxy.prototype.groupAddEntity = function(ownerid, group, entityid, type) {
+    agile.idm.group.addEntity({
+        owner: ownerid,
+        name: group,
+        entityId: entityid,
+        entityType: type
+    }).then(function(updated) {
+        console.log(pretty(updated));
+    });
+}
+
+Proxy.prototype.groupRemoveEntity = function(ownerid, group, entityid, type) {
+    agile.idm.group.removeEntity({
+        owner: ownerid,
+        name: group,
+        entityId: entityid,
+        entityType: type
+    }).then(function(updated) {
+        console.log(pretty(updated));
+    });
+}
+
+/**
+ * #######################################
+ *  user functions
+ * #######################################
+ */
+Proxy.prototype.getCurrentUserInfo = function() {
+    agile.idm.user.getCurrentUserInfo().then(function(info) {
+        console.log(pretty(info));
+    });
+}
+
+Proxy.prototype.getUser = function(userName, authType) {
+    agile.idm.user.get(userName, authType).then(function(user) {
+        console.log(pretty(user));
+    });
+}
+
+Proxy.prototype.createUser = function(userName, authType, role, password) {
+    agile.idm.user.create(userName, authType, {'role':role, 'password':password}).then(function(user) {
+        console.log(pretty(user));
+    });
+}
+
+Proxy.prototype.deleteUser = function(userName, authType) {
+    agile.idm.user.delete(userName, authType).then(function(user) {
+        console.log('User removed!');
+    });
+}
+
+Proxy.prototype.resetUserPassword = function(userName, authType, password) {
+    console.log(agile.idm.user)
+    agile.idm.user.resetPassword(userName, authType, password).then(function() {
+        console.log('Password updated!');
+    });
+}
+
+Proxy.prototype.updateUserPassword = function(oldPassword, newPassword) {
+    agile.idm.user.updatePassword(oldPassword, newPassword).then(function() {
+        console.log('Password updated!');
+    });
+}
+
+/**
+ * #######################################
  *  database functions extends idm.entity
  * #######################################
  */
@@ -100,57 +193,6 @@ Proxy.prototype.getEntitiesSchema = function() {
 	agile.idm.entity.getEntitiesSchema().then(function(jsonschema) {
         console.log(pretty(jsonschema));
 	});
-}
-
-/**
- * #######################################
- *  idm.group functions
- * #######################################
- */
-Proxy.prototype.getGroup = function(ownerid, group) {
-    agile.idm.group.get(ownerid, group).then(function(result) {
-        console.log(pretty(result));
-    });
-}
-
-Proxy.prototype.getAllGroups = function() {
-    agile.idm.group.get().then(function(groups) {
-        console.log(pretty(groups));
-    });
-}
-
-Proxy.prototype.createGroup = function(name) {
-    agile.idm.group.create(name).then(function(group) {
-        console.log(pretty(group));
-    });
-}
-
-Proxy.prototype.deleteGroup = function(ownerid, name) {
-    agile.idm.group.delete(ownerid, name).then(function() {
-        console.log('Group removed!');
-    });
-}
-
-Proxy.prototype.groupAddEntity = function(ownerid, group, entityid, type) {
-    agile.idm.group.addEntity({
-        owner: ownerid,
-        name: group,
-        entityId: entityid,
-        entityType: type
-    }).then(function(updated) {
-        console.log(pretty(updated));
-    });
-}
-
-Proxy.prototype.groupRemoveEntity = function(ownerid, group, entityid, type) {
-    agile.idm.group.removeEntity({
-        owner: ownerid,
-        name: group,
-        entityId: entityid,
-        entityType: type
-    }).then(function(updated) {
-        console.log(pretty(updated));
-    });
 }
 
 /**
