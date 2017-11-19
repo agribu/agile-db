@@ -1,39 +1,39 @@
 {
-    "police":[
+    "police": [
         {
-            "user_name":"agile",
+            "user_name":"Officer",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
         }
     ],
-    "insurance":[
+    "insurance": [
         {
-            "user_name":"agile",
+            "user_name":"InsuranceAgent",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
         }
     ],
-    "emr":[
+    "emr": [
         {
-            "user_name":"agile",
+            "user_name":"Paramedic",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
         }
     ],
-    "physician":[
+    "physician": [
         {
-            "user_name":"agile",
+            "user_name":"Doctor",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
         }
     ],
-    "user":[
+    "user": [
         {
-            "user_name":"bob",
+            "user_name":"Bob",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
