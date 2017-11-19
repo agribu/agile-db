@@ -1,0 +1,7 @@
+{
+    "agile-sdk-handler": "../js/agile-sdk-handler/agile-sdk-handler",
+    "agile_conf": "../../conf/agile_conf.json",
+    "db_conf": "../../conf/db_conf.json",
+    "example_users": "../../examples/users/example_users.json",
+    "example_groups": "../../examples/groups/example_groups.json"
+}
