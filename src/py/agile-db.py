@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-Database-entities
-import mysqlc, os, re, json, argparse
+import os, re, json, argparse
+from utils import mysqlc
 
 # Main configuration file
 main_conf = None
@@ -66,6 +67,13 @@ def main():
 def run(cmd):
     nodejs = "/usr/bin/nodejs "
     return os.popen(nodejs + cmd).read()
+
+def extractIDs(s):
+    identifiers = []
+    result = re.findall(r'\"id\"\:\s\".+', s)
+    for eid in result:
+        identifiers.append(eid.split('"id": "')[1].split('",')[0])
+    return identifiers
 
 # ##################################### #
 #  database functions                   #
@@ -139,9 +147,7 @@ def deleteAll(typename):
         + " --conf " + agile_conf
         + " --getEntityByType"
         + " --type " + typename)
-    items = re.findall(r'\"id\"\:\s\".+', result)
-    for i in items:
-        identifier = i.split('"id": "')[1].split('",')[0]
+    for identifier in extractIDs(result):
         debug = run(agile
             + " --conf " + agile_conf
             + " --deleteEntity"
