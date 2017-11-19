@@ -24,9 +24,9 @@ def main():
     parser.add_argument('--createExampleUsers', help='Creates some example users for testing the emergency policy scenario', action='store_true', required=False)
     parser.add_argument('--deleteExampleUsers', help='Deletes all example users', action='store_true', required=False)
     parser.add_argument('--createExampleGroups', help='Creates some example groups for testing the emergency policy scenario', action='store_true', required=False)
-    parser.add_argument('--deleteExampleGroups', help='Deletes all example groups', required=False)
-    parser.add_argument('--createMappings', help='Maps example users to example groups', required=False)
-    parser.add_argument('--deleteMappings', help='Deletes all mapping of example users to example groups', required=False)
+    parser.add_argument('--deleteExampleGroups', help='Deletes all example groups', action='store_true', required=False)
+    parser.add_argument('--createMappings', help='Maps example users to example groups', action='store_true', required=False)
+    parser.add_argument('--deleteMappings', help='Deletes all mapping of example users to example groups', action='store_true', required=False)
     parser.add_argument('--createExamples', help='Creates all example users, example groups and mapping between them', action='store_true', required=False)
     parser.add_argument('--deleteExamples', help='Deletes all example users, example groups and mapping between them', action='store_true', required=False)
     args = parser.parse_args()
@@ -192,22 +192,23 @@ def createExampleGroups():
         groups = json.load(json_data_file)
 
     for name in groups:
-        print(name)
         createGroup(name)
 
-def deleteExampleGroups(ownerid):
+def deleteExampleGroups():
     global example_groups
     groups = None
     with open(example_groups) as json_data_file:
         groups = json.load(json_data_file)
 
     for name in groups:
-        deleteGroup(ownerid, name)
+        ownerids = extractIDs(getCurrentUserInfo())
+        for oid in ownerids:
+            deleteGroup(oid, name)
 
 # ##################################### #
 #  example_mapping functions            #
 # ##################################### #
-def createMappings(ownerid):
+def createMappings():
     global example_groups, example_users
     users = None
     groups = None
@@ -223,9 +224,11 @@ def createMappings(ownerid):
                         user = str(getUser(x["user_name"], x["auth_type"]))
                         entityids = extractIDs(user)
                         for eid in entityids:
-                            groupAddEntity(ownerid, group, eid, 'user')
+                            ownerids = extractIDs(getCurrentUserInfo())
+                            for oid in ownerids:
+                                groupAddEntity(oid, group, eid, 'user')
 
-def deleteMappings(ownerid):
+def deleteMappings():
     global example_groups, example_users
     users = None
     groups = None
@@ -241,7 +244,9 @@ def deleteMappings(ownerid):
                         user = str(getUser(x["user_name"], x["auth_type"]))
                         entityids = extractIDs(user)
                         for eid in entityids:
-                            groupRemoveEntity(ownerid, group, eid, 'user')
+                            ownerids = extractIDs(getCurrentUserInfo())
+                            for oid in ownerids:
+                                groupRemoveEntity(oid, group, eid, 'user')
 
 # ##################################### #
 #  quick functions                      #
@@ -249,15 +254,11 @@ def deleteMappings(ownerid):
 def createExamples():
     createExampleUsers()
     createExampleGroups()
-    entityids = extractIDs(getCurrentUserInfo())
-    for eid in entityids:
-        createMappings(eid)
+    createMappings()
 
 def deleteExamples():
     deleteExampleUsers()
-    entityids = extractIDs(getCurrentUserInfo())
-    for eid in entityids:
-        deleteExampleGroups(eid)
+    deleteExampleGroups()
 
 # ##################################### #
 #  start                                #
