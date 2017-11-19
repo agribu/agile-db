@@ -27,6 +27,8 @@ def main():
     parser.add_argument('--deleteExampleGroups', help='Deletes all example groups', required=False)
     parser.add_argument('--createMappings', help='Maps example users to example groups', required=False)
     parser.add_argument('--deleteMappings', help='Deletes all mapping of example users to example groups', required=False)
+    parser.add_argument('--createExamples', help='Creates all example users, example groups and mapping between them', action='store_true', required=False)
+    parser.add_argument('--deleteExamples', help='Deletes all example users, example groups and mapping between them', action='store_true', required=False)
     args = parser.parse_args()
 
     if args.config:
@@ -50,7 +52,11 @@ def main():
     if args.createMappings:
         createMappings(args.createMappings)
     if args.deleteMappings:
-        deleteMappings(args.deleteMappings);
+        deleteMappings(args.deleteMappings)
+    if args.createExamples:
+        createExamples()
+    if args.deleteExamples:
+        deleteExamples()
 
 # ##################################### #
 #  helper functions                     #
@@ -67,7 +73,7 @@ def extractIDs(s):
     return identifiers
 
 # ##################################### #
-#  user functions                       #
+#  AGILE user functions                 #
 # ##################################### #
 def addUser(username, authtype, role, password):
     debug = run(agile
@@ -106,7 +112,7 @@ def getCurrentUserInfo():
     return debug
 
 # ##################################### #
-#  group functions                       #
+#  AGILE group functions                #
 # ##################################### #
 def createGroup(name):
     debug = run(agile
@@ -148,15 +154,16 @@ def groupRemoveEntity(ownerid, group, entityid, entitytype):
     return debug
 
 # ##################################### #
-#  quick functions                      #
+#  example_users functions              #
 # ##################################### #
 def createExampleUsers():
     global example_users
+    users = None
     with open(example_users) as json_data_file:
-        example_users = json.load(json_data_file)
+        users = json.load(json_data_file)
 
-    for item in example_users.keys():
-        for x in example_users[item]:
+    for item in users.keys():
+        for x in users[item]:
             username = x["user_name"]
             authtype = x["auth_type"]
             role = x["role"]
@@ -165,42 +172,54 @@ def createExampleUsers():
 
 def deleteExampleUsers():
     global example_users
+    users = None
     with open(example_users) as json_data_file:
-        example_users = json.load(json_data_file)
+        users = json.load(json_data_file)
 
-    for item in example_users.keys():
-        for x in example_users[item]:
+    for item in users.keys():
+        for x in users[item]:
             username = x["user_name"]
             authtype = x["auth_type"]
             deleteUser(username, authtype);
 
+# ##################################### #
+#  example_groups functions             #
+# ##################################### #
 def createExampleGroups():
     global example_groups
+    groups = None
     with open(example_groups) as json_data_file:
-        example_groups = json.load(json_data_file)
+        groups = json.load(json_data_file)
 
-    for name in example_groups:
+    for name in groups:
+        print(name)
         createGroup(name)
 
 def deleteExampleGroups(ownerid):
     global example_groups
+    groups = None
     with open(example_groups) as json_data_file:
-        example_groups = json.load(json_data_file)
+        groups = json.load(json_data_file)
 
-    for name in example_groups:
+    for name in groups:
         deleteGroup(ownerid, name)
 
+# ##################################### #
+#  example_mapping functions            #
+# ##################################### #
 def createMappings(ownerid):
     global example_groups, example_users
+    users = None
+    groups = None
     with open(example_groups) as json_data_file:
-        example_groups = json.load(json_data_file)
+        groups = json.load(json_data_file)
     with open(example_users) as json_data_file:
-        example_users = json.load(json_data_file)
+        users = json.load(json_data_file)
 
-    for item in example_users.keys():
-            for group in example_groups:
+    for item in users.keys():
+            for group in groups:
                 if (item == group):
-                    for x in example_users[item]:
+                    for x in users[item]:
                         user = str(getUser(x["user_name"], x["auth_type"]))
                         entityids = extractIDs(user)
                         for eid in entityids:
@@ -208,19 +227,37 @@ def createMappings(ownerid):
 
 def deleteMappings(ownerid):
     global example_groups, example_users
+    users = None
+    groups = None
     with open(example_groups) as json_data_file:
-        example_groups = json.load(json_data_file)
+        groups = json.load(json_data_file)
     with open(example_users) as json_data_file:
-        example_users = json.load(json_data_file)
+        users = json.load(json_data_file)
 
-    for item in example_users.keys():
-            for group in example_groups:
+    for item in users.keys():
+            for group in groups:
                 if (item == group):
-                    for x in example_users[item]:
+                    for x in users[item]:
                         user = str(getUser(x["user_name"], x["auth_type"]))
                         entityids = extractIDs(user)
                         for eid in entityids:
                             groupRemoveEntity(ownerid, group, eid, 'user')
+
+# ##################################### #
+#  quick functions                      #
+# ##################################### #
+def createExamples():
+    createExampleUsers()
+    createExampleGroups()
+    entityids = extractIDs(getCurrentUserInfo())
+    for eid in entityids:
+        createMappings(eid)
+
+def deleteExamples():
+    deleteExampleUsers()
+    entityids = extractIDs(getCurrentUserInfo())
+    for eid in entityids:
+        deleteExampleGroups(eid)
 
 # ##################################### #
 #  start                                #
