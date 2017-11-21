@@ -3,5 +3,8 @@
     "agile_conf": "../../conf/agile_conf.json",
     "db_conf": "../../conf/db_conf.json",
     "example_users": "../../examples/users/example_users.json",
-    "example_groups": "../../examples/groups/example_groups.json"
+    "example_groups": "../../examples/groups/example_groups.json",
+    "example_db": "../../examples/users/example_db.json",
+    "example_db-tables": "../../examples/groups/example_db-tables.json",
+    "example_db-columns": "../../examples/users/example_db-columns.json"
 }
