@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-Database-entities
+# Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-Users-and-Groups-(Example)
 import os, re, json, argparse
 from utils import mysqlc
 
