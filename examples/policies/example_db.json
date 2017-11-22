@@ -1,0 +1,21 @@
+{
+    "database": "cdb_medical",
+    "policies": [
+        {
+            "op": "read",
+            "locks": [{
+                "lock": "isOwner"
+            }, {
+                "lock": "attrEq",
+                "args": ["group", "physician"]
+            }]
+        },
+        {
+            "op": "write",
+            "locks": [{
+                "lock": "attrEq",
+                "args": ["group", "physician"]
+            }]
+        }
+    ]
+}

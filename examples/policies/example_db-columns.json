@@ -1,0 +1,14 @@
+{
+    "database": "cdb_medical",
+    "table": "patient_data",
+    "column": "excessive_alcohol",
+    "policies": [
+        {
+            "op": "read",
+            "locks": [{
+                "lock": "attrEq",
+                "args": ["group", "police"]
+            }]
+        }
+    ]
+}
