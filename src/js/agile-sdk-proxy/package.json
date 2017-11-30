@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "agile-sdk": "file:../agile-sdk",
+    "agile-sdk": "^1.2.5",
     "fs": "0.0.1-security",
     "json-stringify": "^1.0.0"
   }
