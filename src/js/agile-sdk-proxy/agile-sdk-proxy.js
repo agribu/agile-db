@@ -201,7 +201,6 @@ Proxy.prototype.getEntitiesSchema = function() {
  * #######################################
  */
 Proxy.prototype.pdpEvaluate = function(entityid, type, attr, method) {
-    console.log(agile);
     agile.policies.pdp.evaluate([{
             entityId: entityid,
             entityType: type,
