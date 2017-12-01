@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-Users-and-Groups-(Example)
+# Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90u%CB%96g.py
 import os, re, json, argparse
 from utils import mysqlc
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Documentation available: https://github.com/agribu/agile-db/wiki/SQL-Operations
+# Documentation available: https://github.com/agribu/agile-db/wiki/mysqlc.py
 import pymysql, json, re, argparse
 
 # Database connection

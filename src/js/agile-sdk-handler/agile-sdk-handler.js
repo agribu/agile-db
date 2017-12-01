@@ -1,5 +1,5 @@
 /**
- * Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-SDK-Handler
+ * Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90sdk%E2%80%90handler.js
  */
 
 const fs = require("fs");

@@ -1,5 +1,5 @@
 /**
- * Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-SDK-Proxy
+ * Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90sdk%E2%80%90proxy.js
  */
 
 const fs = require("fs");
