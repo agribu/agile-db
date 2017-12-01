@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Documentation available: https://github.com/agribu/agile-db/wiki/AGILE-Database-entities
+# Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90db%E2%80%90policies.py
 import os, re, json, argparse
 from utils import mysqlc
 
@@ -21,16 +21,16 @@ agile = None
 # ##################################### #
 def main():
     global main_conf, agile_conf, agile, example_db, example_db_tables, example_db_columns
-    parser = argparse.ArgumentParser(description='This python script includes functions to create AGILE user and group entities')
+    parser = argparse.ArgumentParser(description='This python script includes functions to apply example policies to existing entities')
     parser.add_argument('-c','--config', help='Config file',required=True)
-    parser.add_argument('--createDatabasePolicies', help='Creates some example users for testing the emergency policy scenario', action='store_true', required=False)
-    parser.add_argument('--deleteDatabasePolicies', help='Deletes all example users', action='store_true', required=False)
-    parser.add_argument('--createDatabaseTablePolicies', help='Creates some example groups for testing the emergency policy scenario', action='store_true', required=False)
-    parser.add_argument('--deleteDatabaseTablePolicies', help='Deletes all example groups', action='store_true', required=False)
-    parser.add_argument('--createDatabaseColumnsPolicies', help='Maps example users to example groups', action='store_true', required=False)
-    parser.add_argument('--deleteDatabaseColumnsPolicies', help='Deletes all mapping of example users to example groups', action='store_true', required=False)
-    parser.add_argument('--createExamples', help='Creates all example users, example groups and mapping between them', action='store_true', required=False)
-    parser.add_argument('--deleteExamples', help='Deletes all example users, example groups and mapping between them', action='store_true', required=False)
+    parser.add_argument('--createDatabasePolicies', help='Reads and applies example policies to databases', action='store_true', required=False)
+    parser.add_argument('--deleteDatabasePolicies', help='Reads and removes example policies to databases', action='store_true', required=False)
+    parser.add_argument('--createDatabaseTablePolicies', help='Reads and applies example policies to database tables', action='store_true', required=False)
+    parser.add_argument('--deleteDatabaseTablePolicies', help='Reads and removes example policies to database tables', action='store_true', required=False)
+    parser.add_argument('--createDatabaseColumnPolicies', help='Reads and applies example policies to database columns', action='store_true', required=False)
+    parser.add_argument('--deleteDatabaseColumnPolicies', help='Reads and removes example policies to database columns', action='store_true', required=False)
+    parser.add_argument('--createExamplePolicies', help='Reads and applies all example policies', action='store_true', required=False)
+    parser.add_argument('--removeExamplePolicies', help='Reads and removes all example policies', action='store_true', required=False)
     args = parser.parse_args()
 
     if args.config:
@@ -46,20 +46,21 @@ def main():
 
     if args.createDatabasePolicies:
         createDatabasePolicies()
-    # if args.deleteDatabasePolicies():
-    #     deleteDatabasePolicies()
-    # if args.createDatabaseTablePolicies:
-    #     createDatabaseTablePolicies()
-    # if args.deleteDatabaseTablePolicies:
-    #     deleteDatabaseTablePolicies()
-    # if args.createDatabaseColumnsPolicies:
-    #     createDatabaseColumnsPolicies()
-    # if args.deleteDatabaseColumnsPolicies:
-    #     deleteDatabaseColumnsPolicies()
-    # if args.createExamples:
-    #     createExamples()
-    # if args.deleteExamples:
-    #     deleteExamples()
+    if args.deleteDatabasePolicies:
+        deleteDatabasePolicies()
+    if args.createDatabaseTablePolicies:
+        createDatabaseTablePolicies()
+    if args.deleteDatabaseTablePolicies:
+        deleteDatabaseTablePolicies()
+    if args.createDatabaseColumnPolicies:
+        createDatabaseColumnPolicies()
+    if args.deleteDatabaseColumnPolicies:
+        deleteDatabaseColumnPolicies()
+
+    if args.createExamplePolicies:
+        createExamplePolicies()
+    if args.removeExamplePolicies:
+        removeExamplePolicies()
 
 # ##################################### #
 #  helper functions                     #
@@ -114,65 +115,114 @@ def getDatabaseColumn(database, table, column):
     # print(debug)
     return debug
 
-# ##################################### #
-#  AGILE group functions                #
-# ##################################### #
-def createDatabasePolicies():
-    global example_db
-    rules = None
-    with open(example_db) as json_data_file:
-        rules = json.load(json_data_file)
-
-
-    print(rules["policies"])
-    policy = "'[" + ", ".join(str(x) for x in rules["policies"]) + "]'"
-    entityid = extractIDs(getDatabase(rules["database"]))
-    print(entityid)
-
+def setPolicy(id, type, attr, policy):
     debug = run(agile
         + " --conf " + agile_conf
         + " --papSetPolicy"
-        + " --entityid " + entityid[0]
-        + " --type " + 'db'
-        + " --attr " + 'user'
-        + " --policy "
-        + " --file " + '../../examples/policies/db_user_policy.json');
-    print(debug)
+        + " --entityid " + id
+        + " --type " + type
+        + " --attr " + attr
+        + " --policy " + policy);
+    # print(debug)
     # return debug
-# node agile-sdk-handler.js \
-#     --conf agile_conf.json \
-#     --papSetPolicy \
-#     --entityid entityid \
-#     --type 'db' \
-#     --attr 'user'\
-#     --policy
+    print("Successfully applied policies to " + id + "!")
 
-    # print(policies["policies"][0]["op"])
-    # print(policies["policies"][0]["locks"])
+def unsetPolicy(id, type, attr, policy):
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --papDeletePolicy"
+        + " --entityid " + id
+        + " --type " + type
+        + " --attr " + attr);
+    # print(debug)
+    # return debug
+    print("Successfully removed policies from " + id + "!")
 
-# def deleteDatabasePolicies():
-    # print(extractIDs(getDatabase('cdb_medical')))
-# def createDatabaseTablePolicies():
-    # print(extractIDs(getDatabaseTable('cdb_medical', 'patient_data')))
-# def deleteDatabaseTablePolicies():
-    # print(extractIDs(getDatabaseTable('cdb_medical', 'patient_data')))
-# def createDatabaseColumnsPolicies():
-    # print(extractIDs(getDatabaseColumn('cdb_medical', 'medical_information', 'organ_donor')))
-# def deleteDatabaseColumnsPolicies():
-    # print(extractIDs(getDatabaseColumn('cdb_medical', 'medical_information', 'organ_donor')))
+# ##################################### #
+#  Example policy functions             #
+# ##################################### #
+def createDatabasePolicies():
+    global example_db
+    array = None
+    with open(example_db) as json_data_file:
+        array = json.load(json_data_file)
+
+    for rules in array:
+        policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
+        entityid = extractIDs(getDatabase(rules["database"]))
+        setPolicy(entityid[0], 'db', 'name', policy)
+
+def createDatabaseTablePolicies():
+    global example_db_tables
+    array = None
+
+    with open(example_db_tables) as json_data_file:
+        array = json.load(json_data_file)
+
+    for rules in array:
+        policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
+        entityid = extractIDs(getDatabaseTable(rules["database"], rules["table"]))
+        setPolicy(entityid[0], 'db-table', 'table', policy)
+
+def createDatabaseColumnPolicies():
+    global example_db_columns
+    array = None
+
+    with open(example_db_columns) as json_data_file:
+        array = json.load(json_data_file)
+
+    for rules in array:
+        policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
+        entityid = extractIDs(getDatabaseColumn(rules["database"], rules["table"], rules["column"]))
+        setPolicy(entityid[0], 'db-column', 'column', policy)
+
+def deleteDatabasePolicies():
+    global example_db
+    array = None
+    with open(example_db) as json_data_file:
+        array = json.load(json_data_file)
+
+    for rules in array:
+        policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
+        entityid = extractIDs(getDatabase(rules["database"]))
+        unsetPolicy(entityid[0], 'db', 'name', policy)
+
+def deleteDatabaseTablePolicies():
+    global example_db_tables
+    array = None
+
+    with open(example_db_tables) as json_data_file:
+        array = json.load(json_data_file)
+
+    for rules in array:
+        policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
+        entityid = extractIDs(getDatabaseTable(rules["database"], rules["table"]))
+        unsetPolicy(entityid[0], 'db-table', 'table', policy)
+
+def deleteDatabaseColumnPolicies():
+    global example_db_columns
+    array = None
+
+    with open(example_db_columns) as json_data_file:
+        array = json.load(json_data_file)
+
+    for rules in array:
+        policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
+        entityid = extractIDs(getDatabaseColumn(rules["database"], rules["table"], rules["column"]))
+        unsetPolicy(entityid[0], 'db-column', 'column', policy)
 
 # ##################################### #
 #  quick functions                      #
 # ##################################### #
-# def createExamples():
-#     createDatabasePolicies()
-#     createDatabaseTablePolicies()
-#     createDatabaseColumnsPolicies()
-#
-# def deleteExamples():
-#     deleteDatabasePolicies()
-#     deleteDatabaseTablePolicies()
-#     deleteDatabaseColumnsPolicies()
+def createExamplePolicies():
+    createDatabasePolicies()
+    createDatabaseTablePolicies()
+    createDatabaseColumnPolicies()
+
+def removeExamplePolicies():
+    deleteDatabasePolicies()
+    deleteDatabaseTablePolicies()
+    deleteDatabaseColumnPolicies()
 
 # ##################################### #
 #  start                                #
