@@ -102,7 +102,6 @@ Proxy.prototype.deleteUser = function(userName, authType) {
 }
 
 Proxy.prototype.resetUserPassword = function(userName, authType, password) {
-    console.log(agile.idm.user)
     agile.idm.user.resetPassword(userName, authType, password).then(function() {
         console.log('Password updated!');
     });
