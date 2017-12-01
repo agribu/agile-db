@@ -1,14 +1,24 @@
 {
   "name": "agile-sdk-proxy",
   "version": "1.0.0",
-  "description": "",
+  "description": "This package exports functions which can be dynamically called to execute operations with agile-sdk.",
   "main": "agile-sdk-proxy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agribu/agile-db.git"
+  },
+  "keywords": [
+    "agile-sdk"
+  ],
+  "author": "agribu",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agribu/agile-db/issues"
+  },
+  "homepage": "https://github.com/agribu/agile-db#readme",
   "dependencies": {
     "agile-sdk": "^1.2.5",
     "fs": "0.0.1-security",
