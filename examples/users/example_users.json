@@ -1,7 +1,7 @@
 {
     "police": [
         {
-            "user_name":"Officer",
+            "user_name":"officer",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
@@ -9,7 +9,7 @@
     ],
     "insurance": [
         {
-            "user_name":"InsuranceAgent",
+            "user_name":"insuranceAgent",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
@@ -17,7 +17,7 @@
     ],
     "emr": [
         {
-            "user_name":"Paramedic",
+            "user_name":"paramedic",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
@@ -25,7 +25,7 @@
     ],
     "physician": [
         {
-            "user_name":"Doctor",
+            "user_name":"doctor",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
@@ -33,7 +33,7 @@
     ],
     "user": [
         {
-            "user_name":"Bob",
+            "user_name":"bob",
             "auth_type":"agile-local",
             "role":"admin",
             "password":"secret"
