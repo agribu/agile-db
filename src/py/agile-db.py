@@ -106,7 +106,7 @@ def createTables():
     tables = mysqlc.getTables()
     for table in tables:
         tab_ctr += 1
-        db_tab_id = str(tab_ctr) + "-" + mysqlc.config["name"] + "!@!db"
+        db_tab_id = str(tab_ctr) + "-" + mysqlc.config["name"] + "!@!db-table"
         debug = run(agile
             + " --conf " + agile_conf
             + " --createDatabaseColumn"
@@ -124,7 +124,7 @@ def createColumns(table, index, c):
     debug = run(agile
         + " --conf " + agile_conf
         + " --createDatabaseColumn"
-        + " --id " + index + "-" + mysqlc.config["name"] + "!@!db"
+        + " --id " + index + "-" + mysqlc.config["name"] + "!@!db-column"
         + " --type " + "'db-column'"
         + " --database " + mysqlc.config["name"]
         + " --table " + table
