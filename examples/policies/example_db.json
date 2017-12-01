@@ -1,21 +1,26 @@
-{
-    "database": "cdb_medical",
-    "policies": [
-        {
-            "op": "read",
-            "locks": [{
-                "lock": "isOwner"
-            }, {
-                "lock": "attrEq",
-                "args": ["group", "physician"]
-            }]
-        },
-        {
-            "op": "write",
-            "locks": [{
-                "lock": "attrEq",
-                "args": ["group", "physician"]
-            }]
-        }
-    ]
-}
+[
+    {
+        "database": "cdb_medical",
+        "policies": [
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            },
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "attrEq",
+                    "args": ["user_name", "agile"]
+                }]
+            },
+            {
+                "op": "write",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            }
+        ]
+    }
+]

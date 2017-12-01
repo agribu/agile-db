@@ -1,14 +1,28 @@
-{
-    "database": "cdb_medical",
-    "table": "patient_data",
-    "column": "excessive_alcohol",
-    "policies": [
-        {
-            "op": "read",
-            "locks": [{
-                "lock": "attrEq",
-                "args": ["group", "police"]
-            }]
-        }
-    ]
-}
+[
+    {
+        "database": "cdb_medical",
+        "table": "history_data",
+        "column": "excessive_alcohol",
+        "policies": [
+          {
+              "op": "read",
+              "locks": [{
+                  "lock": "isOwner"
+              }]
+          },
+          {
+              "op": "read",
+              "locks": [{
+                  "lock": "attrEq",
+                  "args": ["user_name", "agile"]
+              }]
+          },
+          {
+              "op": "write",
+              "locks": [{
+                  "lock": "isOwner"
+              }]
+          }
+        ]
+    }
+]

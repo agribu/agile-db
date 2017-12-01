@@ -1,40 +1,75 @@
-{
-    "database": "cdb_medical",
-    "table": "patient_data",
-    "policies": [
-        {
-            "op": "read",
-            "locks": [{
-                "lock": "attrEq",
-                "args": ["group", "police"]
-            }, {
-                "lock": "attrEq",
-                "args": ["group", "insurance"]
-            }]
-        }
-    ]
-}, {
-    "database": "cdb_medical",
-    "table": "medical_information",
-    "policies": [
-        {
-            "op": "read",
-            "locks": [{
-                "lock": "attrEq",
-                "args": ["group", "emr"]
-            }]
-        }
-    ]
-}, {
-    "database": "cdb_medical",
-    "table": "emergency_contact",
-    "policies": [
-        {
-            "op": "read",
-            "locks": [{
-                "lock": "attrEq",
-                "args": ["group", "police"]
-            }]
-        }
-    ]
-}
+[
+    {
+        "database": "cdb_medical",
+        "table": "patient_data",
+        "policies": [
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            },
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "attrEq",
+                    "args": ["user_name", "agile"]
+                }]
+            },
+            {
+                "op": "write",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            }
+        ]
+    }, {
+        "database": "cdb_medical",
+        "table": "medical_information",
+        "policies": [
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            },
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "attrEq",
+                    "args": ["user_name", "agile"]
+                }]
+            },
+            {
+                "op": "write",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            }
+        ]
+    }, {
+        "database": "cdb_medical",
+        "table": "emergency_contact",
+        "policies": [
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            },
+            {
+                "op": "read",
+                "locks": [{
+                    "lock": "attrEq",
+                    "args": ["user_name", "agile"]
+                }]
+            },
+            {
+                "op": "write",
+                "locks": [{
+                    "lock": "isOwner"
+                }]
+            }
+        ]
+    }
+]
