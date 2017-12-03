@@ -191,6 +191,7 @@ function inputHandler() {
         if (typeof argv.type === 'string') { type = argv.type; }
         if (typeof argv.attr === 'string') { attr = argv.attr; }
         if (typeof argv.value === 'string') { value = argv.value; }
+        if (typeof argv.value === 'number') { value = argv.value.toString(); }
         proxy.setEntityAttribute(id, type, attr, value);
     }
 
