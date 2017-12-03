@@ -260,6 +260,20 @@ function inputHandler() {
         if (typeof argv.attr === 'string') { attr = argv.attr; }
         proxy.papDeletePolicy(entityid, type, attr);
     }
+
+    if (argv.idmTokenSet) {
+        var token;
+        if (typeof argv.token === 'string') { token = argv.token; }
+        proxy.idmTokenSet(token);
+    }
+
+    if (argv.idmTokenGet) {
+        proxy.idmTokenGet();
+    }
+
+    if (argv.idmTokenDelete) {
+        proxy.idmTokenDelete();
+    }
 }
 
 function init() {

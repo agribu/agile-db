@@ -245,3 +245,20 @@ Proxy.prototype.papDeletePolicy = function(entityid, type, attr) {
         console.log(pretty(results));
     });
 }
+
+/**
+* #######################################
+*  idm.token functions
+* #######################################
+*/
+Proxy.prototype.idmTokenSet = function(token) {
+    agile.tokenSet(token);
+}
+
+Proxy.prototype.idmTokenGet = function() {
+    agile.tokenGet();
+}
+
+Proxy.prototype.idmTokenDelete = function() {
+    agile.tokenDelete();
+}
