@@ -1,8 +1,8 @@
 [
     {
         "database": "cdb_medical",
-        "table": "history_data",
-        "column": "excessive_alcohol",
+        "table": "medical_information",
+        "column": "id",
         "policies": [
           {
               "op": "read",
@@ -20,7 +20,8 @@
           {
               "op": "write",
               "locks": [{
-                  "lock": "isOwner"
+                "lock": "attrEq",
+                "args": ["user_name", "bob"]
               }]
           }
         ]
