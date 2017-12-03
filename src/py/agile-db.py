@@ -25,7 +25,7 @@ col_ctr = 0
 def main():
     global main_conf, agile_conf, db_conf, agile
     parser = argparse.ArgumentParser(description='This python script includes functions to translate a database with its tables and columns into AGILE entities')
-    parser.add_argument('-c','--config', help='Config file',required=True)
+    parser.add_argument('--conf', help='Config file',required=True)
     parser.add_argument('--createDatabase', help='Creates a database entity based on a provided configuration', action='store_true', required=False)
     parser.add_argument('--createTables', help='Creates table entities from the configured database', action='store_true', required=False)
     parser.add_argument('--createColumns', help='Creates column entities from the configured database', action='store_true', required=False)
@@ -34,8 +34,8 @@ def main():
     parser.add_argument('--dbReset', help='Deletes the database, and all tables and column entites', action='store_true', required=False)
     args = parser.parse_args()
 
-    if args.config:
-        with open(args.config) as json_data_file:
+    if args.conf:
+        with open(args.conf) as json_data_file:
             main_conf = json.load(json_data_file)
 
         agile_conf = main_conf["agile_conf"]

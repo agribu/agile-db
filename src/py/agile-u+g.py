@@ -20,7 +20,7 @@ agile = None
 def main():
     global main_conf, agile_conf, agile, example_users, example_groups
     parser = argparse.ArgumentParser(description='This python script includes functions to create AGILE user and group entities')
-    parser.add_argument('-c','--config', help='Config file',required=True)
+    parser.add_argument('--conf', help='Config file',required=True)
     parser.add_argument('--createExampleUsers', help='Creates some example users for testing the emergency policy scenario', action='store_true', required=False)
     parser.add_argument('--deleteExampleUsers', help='Deletes all example users', action='store_true', required=False)
     parser.add_argument('--createExampleGroups', help='Creates some example groups for testing the emergency policy scenario', action='store_true', required=False)
@@ -31,8 +31,8 @@ def main():
     parser.add_argument('--deleteExamples', help='Deletes all example users, example groups and mapping between them', action='store_true', required=False)
     args = parser.parse_args()
 
-    if args.config:
-        with open(args.config) as json_data_file:
+    if args.conf:
+        with open(args.conf) as json_data_file:
             main_conf = json.load(json_data_file)
 
         agile_conf = main_conf["agile_conf"]

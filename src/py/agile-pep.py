@@ -25,7 +25,7 @@ agile = None
 def main():
     global main_conf, agile_conf, agile, example_db, example_db_tables, example_db_columns, db_conf
     parser = argparse.ArgumentParser(description='This python script includes functions to apply example policies to existing entities')
-    parser.add_argument('-c','--config', help='Config file',required=True)
+    parser.add_argument('--conf', help='Config file',required=True)
     parser.add_argument('--checkQuery', help='Reads and applies example policies to databases', required=False)
     # parser.add_argument('--deleteDatabasePolicies', help='Reads and removes example policies to databases', action='store_true', required=False)
     # parser.add_argument('--createDatabaseTablePolicies', help='Reads and applies example policies to database tables', action='store_true', required=False)
@@ -36,8 +36,8 @@ def main():
     # parser.add_argument('--removeExamplePolicies', help='Reads and removes all example policies', action='store_true', required=False)
     args = parser.parse_args()
 
-    if args.config:
-        with open(args.config) as json_data_file:
+    if args.conf:
+        with open(args.conf) as json_data_file:
             main_conf = json.load(json_data_file)
 
         agile_conf = main_conf["agile_conf"]
@@ -128,7 +128,7 @@ def setCurrentUser(token):
         + " --attr " + attr
         + " --method " + method);
     # print(debug)
-    # return debug    
+    # return debug
 
 # ##################################### #
 #  helper functions                     #

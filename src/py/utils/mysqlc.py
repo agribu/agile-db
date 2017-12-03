@@ -15,7 +15,7 @@ config = None
 def main():
     global inputfile
     parser = argparse.ArgumentParser(description='This script executes operations on a configured database.')
-    parser.add_argument('-i','--input', help='Config file',required=True)
+    parser.add_argument('--conf', help='Config file',required=True)
     parser.add_argument('--getDatabase', help='Database name', action='store_true', required=False)
     parser.add_argument('--getTables', help='Database tables as list', action='store_true', required=False)
     parser.add_argument('--getJSONStructure', help='Retrieve Database as JSON Structure', action='store_true', required=False)
@@ -23,9 +23,9 @@ def main():
     parser.add_argument('--executeQuery', help='Execute SQL query', required=False)
     args = parser.parse_args()
 
-    if args.input:
-        inputfile = args.input
-        readJSONFile(inputfile)
+    if args.conf:
+        conf = args.conf
+        readJSONFile(conf)
         connect()
 
         if args.getDatabase:
