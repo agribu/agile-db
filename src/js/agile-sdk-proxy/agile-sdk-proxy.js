@@ -252,13 +252,13 @@ Proxy.prototype.papDeletePolicy = function(entityid, type, attr) {
 * #######################################
 */
 Proxy.prototype.idmTokenSet = function(token) {
-    agile.tokenSet(token);
+    console.log(agile.tokenSet(token));
 }
 
 Proxy.prototype.idmTokenGet = function() {
-    agile.tokenGet();
+    console.log(agile.tokenGet());
 }
 
 Proxy.prototype.idmTokenDelete = function() {
-    agile.tokenDelete();
+    console.log(agile.tokenDelete());
 }
