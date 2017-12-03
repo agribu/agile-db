@@ -81,6 +81,26 @@ def getDatabase(database):
     # print(debug)
     return debug
 
+def getExistingDatabase(identifier):
+    split = re.split('@', identifier)
+    database = split[0]
+    split = re.split(':', split[1])
+    host = split[0]
+    port = split[1]
+
+    entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db"' + '}'
+    db_constr = '{' + '"attributeType":' + '"name"' + ',' + '"attributeValue":'+ '"' + database + '"' + '}'
+    host_constr = '{' + '"attributeType":' + '"host"' + ',' + '"attributeValue":'+ '"' + host + '"' + '}'
+    port_constr = '{' + '"attributeType":' + '"port"' + ',' + '"attributeValue":'+ '"' + port + '"' + '}'
+    constraints = '\'[' + entitytype + ', ' + db_constr + ', ' + host_constr + ', ' + port_constr + ']\''
+
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --getEntityByMultiAttributeValue"
+        + " --constraints " + constraints)
+    # print(debug)
+    return debug.split()
+
 def getDatabaseTable(database, table):
     entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db-table"' + '}'
     table = '{' + '"attributeType":' + '"table"' + ',' + '"attributeValue":'+ '"' + table + '"' + '}'
@@ -168,6 +188,9 @@ def readableTables(database):
 
     return tables
 
+def canReadTable(database, table):
+    return table in readableTables(database)
+
 def writableTables(database):
     tables = []
     for t in mysqlc.getTables():
@@ -175,6 +198,9 @@ def writableTables(database):
             tables.append(t)
 
     return tables
+
+def canWriteTable(database, table):
+    return table in writableTables(database)
 
 def evaluateDatabaseColumnPolicy(database, table, column, method):
     column_id = extractIDs(getDatabaseColumn(database, table, column))[0]
@@ -188,6 +214,9 @@ def readableColumns(database, table):
 
     return columns
 
+def canReadColumn(database, table, column):
+    return column in readableColumns(database, table)
+
 def writableColumns(database, table):
     columns = []
     for c in mysqlc.getColumns(table):
@@ -195,6 +224,9 @@ def writableColumns(database, table):
             columns.append(c)
 
     return columns
+
+def canWriteColumn(database, table, column):
+    return column in writableColumns(database, table)
 
 # ##################################### #
 #  SQL query syntax functions           #
@@ -254,10 +286,25 @@ def hasWildcard(query):
 
     return False
 
-
 # ##################################### #
 #  Database policy functions            #
 # ##################################### #
+
+def getCurrentToken():
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --pdpEvaluate"
+        + " --idmTokenGet ");
+    # print(debug)
+    return debug.strip()
+
+def setCurrentToken(token):
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --pdpEvaluate"
+        + " --idmTokenSet " + token);
+    # print(debug)
+    return debug.strip()
 
 def checkQuery(query):
     # if user can read or write anything to database, let him do it
@@ -265,25 +312,78 @@ def checkQuery(query):
     parseQuery(query)
 
 def parseQuery(query):
+    token = getCurrentToken()
+    db_id = 'cdb_medical@localhost:3307'
+
     mysqlc.readJSONFile(db_conf)
     mysqlc.connect()
     database = mysqlc.getDatabaseName();
 
-    query_type = getQueryType(query)
-    table = getTableFromQuery(query)
-    column = getColumnFromQuery(query, table)
-    wildcard = hasWildcard(query)
-    method = getMethod(query_type)
+    canActionBePerformed = False;
+    queryType = None;
+    if getExistingDatabase != ['[]']:
+        if getMethod(query_type) == 'read':
+            queryType = 'read';
+            canActionBePerformed = canReadDatabase()
+        elif getMethod(query_type) == 'write':
+            queryType = 'write';
+            canActionBePerformed = canWriteDatabase()
+        elif getMethod(query_type) == 'manage':
+            print("SQL operation supported yet!")
+        else:
+            print("Something is wrong with the SQL query type!")
+    else:
+        print("Database unknown!")
 
+    if canActionBePerformed:
+        table = getTableFromQuery(query)
+        column = getColumnFromQuery(query, table)
+        if hasWildcard(query):
+            if table:
+                if queryType == 'read':
+                    if canReadTable(database, table):
+                        mysqlc.executeQuery(query)
+                    else:
+                        print("SQL operation: Permission denied!")
+                elif queryType == 'write':
+                    if canWriteTable(database, table):
+                        mysqlc.executeQuery(query)
+                    else:
+                        print("SQL operation: Permission denied!")
+                else:
+                    print("Something is wrong with the SQL query type! Only read or write operations are supported!")
+            else:
+                print("Something is wrong with the requested database table!")
+        elif getColumnFromQuery(query, table):
+            if column:
+                if queryType == 'read':
+                    if canReadTable(database, table) || canReadColumn(database, table, column):
+                        mysqlc.executeQuery(query)
+                    else:
+                        print("SQL operation: Permission denied!")
+                elif queryType == 'write':
+                    if canWriteTable(database, table) || canWriteColumn(database, table, column):
+                        mysqlc.executeQuery(query)
+                    else:
+                        print("SQL operation: Permission denied!")
+        else:
+            print("Ooops, something went wrong!")
+    else:
+        print("SQL operation: Permission denied!")
 
-    print(query_type)
-    print(table)
-    print(column)
-    print(wildcard)
-    print(method)
-
-
-
+    # query_type = getQueryType(query)
+    # table = getTableFromQuery(query)
+    # column = getColumnFromQuery(query, table)
+    # wildcard = hasWildcard(query)
+    # method = getMethod(query_type)
+    #
+    # print(token)
+    # print(existing_db)
+    # print(query_type)
+    # print(table)
+    # print(column)
+    # print(wildcard)
+    # print(method)
 
     # print("canReadDatabase: " + str(canReadDatabase()))
     # print("canWriteDatabase: " + str(canWriteDatabase()))
