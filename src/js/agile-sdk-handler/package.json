@@ -1,0 +1,27 @@
+{
+  "name": "agile-sdk-handler",
+  "version": "1.0.0",
+  "description": "This module provides cli functions for agile-sdk",
+  "main": "agile-sdk-handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agribu/agile-db.git"
+  },
+  "keywords": [
+    "agile-sdk"
+  ],
+  "author": "agribu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agribu/agile-db/issues"
+  },
+  "homepage": "https://github.com/agribu/agile-db#readme",
+  "dependencies": {
+    "agile-sdk-proxy": "file:../agile-sdk-proxy",
+    "fs": "0.0.1-security",
+    "yargs": "^10.0.3"
+  }
+}
