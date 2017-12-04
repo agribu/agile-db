@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90db%E2%80%90policies.py
 import os, re, json, argparse
-from utils import mysqlc
+from utils import helpers
 
 # Main configuration file
 main_conf = None
@@ -36,9 +36,9 @@ def main():
     if args.conf:
         with open(args.conf) as json_data_file:
             main_conf = json.load(json_data_file)
+        helpers.initialize(args.conf)
 
         agile_conf = main_conf["agile_conf"]
-        db_conf = main_conf["db_conf"]
         agile = main_conf["agile-sdk-handler"]
         example_db = main_conf["example_db"]
         example_db_tables = main_conf["example_db-tables"]
@@ -63,82 +63,6 @@ def main():
         removeExamplePolicies()
 
 # ##################################### #
-#  helper functions                     #
-# ##################################### #
-def run(cmd):
-    nodejs = "/usr/bin/nodejs "
-    return os.popen(nodejs + cmd).read()
-
-def extractIDs(s):
-    identifiers = []
-    result = re.findall(r'id:+\s.+', s)
-    for eid in result:
-        identifiers.append(eid.split('id: ')[1].split(',')[0])
-    return identifiers
-
-def getDatabase(database):
-    entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db"' + '}'
-    database = '{' + '"attributeType":' + '"name"' + ',' + '"attributeValue":'+ '"' + database + '"' + '}'
-    constraints = '\'[' + entitytype + ', ' + database + ']\''
-
-    debug = run(agile
-        + " --conf " + agile_conf
-        + " --getEntityByMultiAttributeValue"
-        + " --constraints " + constraints)
-    # print(debug)
-    return debug
-
-def getDatabaseTable(database, table):
-    entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db-table"' + '}'
-    table = '{' + '"attributeType":' + '"table"' + ',' + '"attributeValue":'+ '"' + table + '"' + '}'
-    database = '{' + '"attributeType":' + '"database"' + ',' + '"attributeValue":'+ '"' + database + '"' + '}'
-    constraints = '\'[' + entitytype + ', ' + database + ', ' + table + ']\''
-
-    debug = run(agile
-        + " --conf " + agile_conf
-        + " --getEntityByMultiAttributeValue"
-        + " --constraints " + constraints)
-    # print(debug)
-    return debug
-
-def getDatabaseColumn(database, table, column):
-    entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db-column"' + '}'
-    table = '{' + '"attributeType":' + '"table"' + ',' + '"attributeValue":'+ '"' + table + '"' + '}'
-    database = '{' + '"attributeType":' + '"database"' + ',' + '"attributeValue":'+ '"' + database + '"' + '}'
-    column = '{' + '"attributeType":' + '"column"' + ',' + '"attributeValue":'+ '"' + column + '"' + '}'
-    constraints = '\'[' + entitytype + ', ' + database + ', ' + table + ', ' + column + ']\''
-
-    debug = run(agile
-        + " --conf " + agile_conf
-        + " --getEntityByMultiAttributeValue"
-        + " --constraints " + constraints)
-    # print(debug)
-    return debug
-
-def setPolicy(id, type, attr, policy):
-    debug = run(agile
-        + " --conf " + agile_conf
-        + " --papSetPolicy"
-        + " --entityid " + id
-        + " --type " + type
-        + " --attr " + attr
-        + " --policy " + policy);
-    # print(debug)
-    # return debug
-    print("Successfully applied policies to " + id + "!")
-
-def unsetPolicy(id, type, attr, policy):
-    debug = run(agile
-        + " --conf " + agile_conf
-        + " --papDeletePolicy"
-        + " --entityid " + id
-        + " --type " + type
-        + " --attr " + attr);
-    # print(debug)
-    # return debug
-    print("Successfully removed policies from " + id + "!")
-
-# ##################################### #
 #  Example policy functions             #
 # ##################################### #
 def createDatabasePolicies():
@@ -149,8 +73,8 @@ def createDatabasePolicies():
 
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
-        entityid = extractIDs(getDatabase(rules["database"]))
-        setPolicy(entityid[0], 'db', 'name', policy)
+        entityid = helpers.extractIDs(helpers.getDatabase(rules["database"]))
+        helpers.setPolicy(entityid[0], 'db', 'name', policy)
 
 def createDatabaseTablePolicies():
     global example_db_tables
@@ -161,8 +85,8 @@ def createDatabaseTablePolicies():
 
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
-        entityid = extractIDs(getDatabaseTable(rules["database"], rules["table"]))
-        setPolicy(entityid[0], 'db-table', 'table', policy)
+        entityid = helpers.extractIDs(helpers.getDatabaseTable(rules["database"], rules["table"]))
+        helpers.setPolicy(entityid[0], 'db-table', 'table', policy)
 
 def createDatabaseColumnPolicies():
     global example_db_columns
@@ -173,8 +97,8 @@ def createDatabaseColumnPolicies():
 
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
-        entityid = extractIDs(getDatabaseColumn(rules["database"], rules["table"], rules["column"]))
-        setPolicy(entityid[0], 'db-column', 'column', policy)
+        entityid = helpers.extractIDs(helpers.getDatabaseColumn(rules["database"], rules["table"], rules["column"]))
+        helpers.setPolicy(entityid[0], 'db-column', 'column', policy)
 
 def deleteDatabasePolicies():
     global example_db
@@ -184,8 +108,8 @@ def deleteDatabasePolicies():
 
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
-        entityid = extractIDs(getDatabase(rules["database"]))
-        unsetPolicy(entityid[0], 'db', 'name', policy)
+        entityid = helpers.extractIDs(helpers.getDatabase(rules["database"]))
+        helpers.unsetPolicy(entityid[0], 'db', 'name', policy)
 
 def deleteDatabaseTablePolicies():
     global example_db_tables
@@ -196,8 +120,8 @@ def deleteDatabaseTablePolicies():
 
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
-        entityid = extractIDs(getDatabaseTable(rules["database"], rules["table"]))
-        unsetPolicy(entityid[0], 'db-table', 'table', policy)
+        entityid = helpers.extractIDs(helpers.getDatabaseTable(rules["database"], rules["table"]))
+        helpers.unsetPolicy(entityid[0], 'db-table', 'table', policy)
 
 def deleteDatabaseColumnPolicies():
     global example_db_columns
@@ -208,8 +132,8 @@ def deleteDatabaseColumnPolicies():
 
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
-        entityid = extractIDs(getDatabaseColumn(rules["database"], rules["table"], rules["column"]))
-        unsetPolicy(entityid[0], 'db-column', 'column', policy)
+        entityid = helpers.extractIDs(helpers.getDatabaseColumn(rules["database"], rules["table"], rules["column"]))
+        helpers.unsetPolicy(entityid[0], 'db-column', 'column', policy)
 
 # ##################################### #
 #  quick functions                      #
