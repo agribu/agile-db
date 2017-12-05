@@ -68,7 +68,7 @@ def getExistingDatabase(identifier):
         + " --getEntityByMultiAttributeValue"
         + " --constraints " + str(constraints))
     # print(debug)
-    return debug.split()
+    return debug
 
 def getDatabaseTable(database, table):
     entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db-table"' + '}'
