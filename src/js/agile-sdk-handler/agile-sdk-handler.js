@@ -285,7 +285,12 @@ function init() {
      */
     if (typeof argv.conf === 'string') {
         var agile_conf = argv.conf;
-        var config = JSON.parse(fs.readFileSync(agile_conf));
+        var config;
+        try {
+          config = JSON.parse(fs.readFileSync(agile_conf));
+        } catch (err) {
+          config = JSON.parse(agile_conf);
+        }
         var Proxy = require('agile-sdk-proxy');
         proxy = new Proxy(config);
     }
