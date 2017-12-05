@@ -78,7 +78,6 @@ function inputHandler() {
         if (typeof argv.authtype === 'string') { authtype = argv.authtype; }
         if (typeof argv.role === 'string') { role = argv.role; }
         if (typeof argv.password === 'string') { password = argv.password; }
-        console.log("Handler: " + username + ", " + authtype + ", " + role + ", " + password)
         proxy.createUser(username, authtype, role, password);
     }
 
