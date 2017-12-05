@@ -36,6 +36,7 @@ def main():
     if args.conf:
         with open(args.conf) as json_data_file:
             main_conf = json.load(json_data_file)
+
         helpers.initialize(args.conf)
 
         agile_conf = main_conf["agile_conf"]

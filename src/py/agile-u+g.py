@@ -36,6 +36,8 @@ def main():
         with open(args.conf) as json_data_file:
             main_conf = json.load(json_data_file)
 
+        helpers.initialize(args.conf)
+
         agile_conf = main_conf["agile_conf"]
         db_conf = main_conf["db_conf"]
         agile = main_conf["agile-sdk-handler"]
