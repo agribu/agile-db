@@ -289,6 +289,7 @@ function init() {
         try {
           config = JSON.parse(fs.readFileSync(agile_conf));
         } catch (err) {
+          // Read config from JSON string
           config = JSON.parse(agile_conf);
         }
         var Proxy = require('agile-sdk-proxy');
