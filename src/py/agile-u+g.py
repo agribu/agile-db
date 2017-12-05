@@ -71,8 +71,8 @@ def addUser(username, authtype, role, password):
         + " --username " + username
         + " --authtype " + authtype
         + " --role " + role
-        + " --password" + password)
-    print(debug)
+        + " --password " + password)
+    # print(debug)
     return debug
 
 def getUser(username, authtype):
