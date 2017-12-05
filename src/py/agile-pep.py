@@ -83,16 +83,14 @@ def parseQuery(query, db_id):
             evaluateQuery(db_id, query, database)
             mysqlc.terminate()
         else:
-            raise
-    except:
-        print("SQL operation failed!")
-        # print("SQL operation: Database not found!\n" + err)
+            raise Exception("SQL operation failed!")
+    except Exception as e:
+        print(e)
+        mysqlc.terminate()
 
 
 def evaluateQuery(db_id, query, database):
     queryType = helpers.getMethod(helpers.getQueryType(query))
-    # table = helpers.getTableFromQuery(query)
-    # column = helpers.getColumnFromQuery(query, table)
 
     print("Evaluating Query! Please stand by ...")
     if queryType == 'read':
@@ -104,8 +102,7 @@ def evaluateQuery(db_id, query, database):
         table_cond = helpers.canWriteTable
         column_cond = helpers.canWriteColumn
     else:
-        print("Something is wrong with the SQL query type!")
-        raise
+        raise Exception("Something is wrong with the SQL query type!")
 
     if database_cond():
         result = mysqlc.executeQuery(query)[0]
@@ -113,14 +110,15 @@ def evaluateQuery(db_id, query, database):
         table = helpers.getTableFromQuery(query)
         table_cond = table_cond(database, table)
         if table_cond | (helpers.hasWildcard(query) & table_cond):
+            print("table")
             result = mysqlc.executeQuery(query)[0]
         else:
-            table = helpers.getTableFromQuery(query)
             column = helpers.getColumnFromQuery(query, table)
             if column_cond(database, table, column):
+                print("col")
                 result = mysqlc.executeQuery(query)[0]
             else:
-                print("SQL operation: Permission denied!")
+                raise Exception("SQL operation: Permission denied!")
 
     # Check for query result and print flattened output
     print(list(itertools.chain(result)) if result != None else "")
