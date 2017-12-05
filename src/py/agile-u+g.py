@@ -2,6 +2,7 @@
 # Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90u%CB%96g.py
 import os, re, json, argparse
 from utils import mysqlc
+from utils import helpers
 
 # Main configuration file
 main_conf = None
@@ -48,35 +49,21 @@ def main():
     if args.createExampleGroups:
         createExampleGroups()
     if args.deleteExampleGroups:
-        deleteExampleGroups(args.deleteExampleGroups)
+        deleteExampleGroups()
     if args.createMappings:
-        createMappings(args.createMappings)
+        createMappings()
     if args.deleteMappings:
-        deleteMappings(args.deleteMappings)
+        deleteMappings()
     if args.createExamples:
         createExamples()
     if args.deleteExamples:
         deleteExamples()
 
 # ##################################### #
-#  helper functions                     #
-# ##################################### #
-def run(cmd):
-    nodejs = "/usr/bin/nodejs "
-    return os.popen(nodejs + cmd).read()
-
-def extractIDs(s):
-    identifiers = []
-    result = re.findall(r'\"id\"\:\s\".+', s)
-    for eid in result:
-        identifiers.append(eid.split('"id": "')[1].split('",')[0])
-    return identifiers
-
-# ##################################### #
 #  AGILE user functions                 #
 # ##################################### #
 def addUser(username, authtype, role, password):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --createUser"
         + " --username " + username
@@ -87,7 +74,7 @@ def addUser(username, authtype, role, password):
     return debug
 
 def getUser(username, authtype):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --getUser"
         + " --username " + username
@@ -96,7 +83,7 @@ def getUser(username, authtype):
     return debug
 
 def deleteUser(username, authtype):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --deleteUser"
         + " --username " + username
@@ -105,7 +92,7 @@ def deleteUser(username, authtype):
     return debug
 
 def getCurrentUserInfo():
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --getCurrentUserInfo")
     # print(debug)
@@ -115,7 +102,7 @@ def getCurrentUserInfo():
 #  AGILE group functions                #
 # ##################################### #
 def createGroup(name):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --createGroup"
         + " --name " + name)
@@ -123,7 +110,7 @@ def createGroup(name):
     return debug
 
 def deleteGroup(ownerid, name):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --deleteGroup"
         + " --ownerid " + ownerid
@@ -132,7 +119,7 @@ def deleteGroup(ownerid, name):
     return debug
 
 def groupAddEntity(ownerid, group, entityid, entitytype):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --groupAddEntity"
         + " --ownerid " + ownerid
@@ -143,7 +130,7 @@ def groupAddEntity(ownerid, group, entityid, entitytype):
     return debug
 
 def groupRemoveEntity(ownerid, group, entityid, entitytype):
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --groupRemoveEntity"
         + " --ownerid " + ownerid
@@ -201,9 +188,8 @@ def deleteExampleGroups():
         groups = json.load(json_data_file)
 
     for name in groups:
-        ownerids = extractIDs(getCurrentUserInfo())
-        for oid in ownerids:
-            deleteGroup(oid, name)
+        ownerid = helpers.getJSON(getCurrentUserInfo())["id"]
+        deleteGroup(ownerid, name)
 
 # ##################################### #
 #  example_mapping functions            #
@@ -222,11 +208,10 @@ def createMappings():
                 if (item == group):
                     for x in users[item]:
                         user = str(getUser(x["user_name"], x["auth_type"]))
-                        entityids = extractIDs(user)
-                        for eid in entityids:
-                            ownerids = extractIDs(getCurrentUserInfo())
-                            for oid in ownerids:
-                                groupAddEntity(oid, group, eid, 'user')
+                        print(user)
+                        entityid = helpers.getJSON(user)["id"]
+                        ownerid = helpers.getJSON(getCurrentUserInfo())["id"]
+                        groupAddEntity(ownerid, group, entityid, 'user')
 
 def deleteMappings():
     global example_groups, example_users
@@ -242,11 +227,9 @@ def deleteMappings():
                 if (item == group):
                     for x in users[item]:
                         user = str(getUser(x["user_name"], x["auth_type"]))
-                        entityids = extractIDs(user)
-                        for eid in entityids:
-                            ownerids = extractIDs(getCurrentUserInfo())
-                            for oid in ownerids:
-                                groupRemoveEntity(oid, group, eid, 'user')
+                        entityid = helpers.getJSON(user)["id"]
+                        ownerid = helpers.getJSON(getCurrentUserInfo())["id"]
+                        groupRemoveEntity(ownerid, group, entityid, 'user')
 
 # ##################################### #
 #  quick functions                      #

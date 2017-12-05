@@ -2,6 +2,7 @@
 # Documentation available: https://github.com/agribu/agile-db/wiki/agile%E2%80%90db.py
 import os, re, json, argparse
 from utils import mysqlc
+from utils import helpers
 
 # Main configuration file
 main_conf = None
@@ -62,27 +63,13 @@ def main():
         mysqlc.terminate()
 
 # ##################################### #
-#  helper functions                     #
-# ##################################### #
-def run(cmd):
-    nodejs = "/usr/bin/nodejs "
-    return os.popen(nodejs + cmd).read()
-
-def extractIDs(s):
-    identifiers = []
-    result = re.findall(r'\"id\"\:\s\".+', s)
-    for eid in result:
-        identifiers.append(eid.split('"id": "')[1].split('",')[0])
-    return identifiers
-
-# ##################################### #
 #  database functions                   #
 # ##################################### #
 def createDatabase():
     global db_ctr
     db_ctr += 1
     db_id = mysqlc.config["name"] + "!@!db"
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --createEntity"
         + " --id " + db_id
@@ -92,7 +79,7 @@ def createDatabase():
 
     for key, value in mysqlc.config.items():
         if key not in "name":
-            debug = run(agile
+            debug = helpers.run(agile
                 + " --conf " + agile_conf
                 + " --setEntityAttribute"
                 + " --id " + db_id
@@ -107,7 +94,7 @@ def createTables():
     for table in tables:
         tab_ctr += 1
         db_tab_id = str(tab_ctr) + "-" + mysqlc.config["name"] + "!@!db-table"
-        debug = run(agile
+        debug = helpers.run(agile
             + " --conf " + agile_conf
             + " --createDatabaseColumn"
             + " --id " + db_tab_id
@@ -121,7 +108,7 @@ def createColumns(table, index, c):
     debug = table + " : " + ','.join(columns)
 
     # for c in columns:
-    debug = run(agile
+    debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --createDatabaseColumn"
         + " --id " + index + "-" + mysqlc.config["name"] + "!@!db-column"
@@ -143,17 +130,17 @@ def createAllColumns():
         col_ctr = 0
 
 def deleteAll(typename):
-    result = run(agile
+    result = helpers.run(agile
         + " --conf " + agile_conf
         + " --getEntityByType"
         + " --type " + typename)
-    for identifier in extractIDs(result):
-        debug = run(agile
+    for x in helpers.getJSON(result):
+        debug = helpers.run(agile
             + " --conf " + agile_conf
             + " --deleteEntity"
-            + " --id " + identifier
+            + " --id " + x["id"]
             + " --type " + typename)
-        print(debug + " - " + identifier)
+        print(debug + " - " + x["id"])
 
 # ##################################### #
 #  quick functions                      #
