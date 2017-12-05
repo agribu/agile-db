@@ -14,29 +14,56 @@ agile = None
 #  main function                        #
 # ##################################### #
 def main():
-    printtest()
+    print("Start helpers.py")
 
 def initialize(conf):
-    global agile, agile_conf
+    global agile, agile_conf, main_conf
     with open(conf) as json_data_file:
         main_conf = json.load(json_data_file)
     agile_conf = main_conf["agile_conf"]
     agile = main_conf["agile-sdk-handler"]
 
-def printtest():
-    database = getDatabase('cdb_medical')
-    print(getJSON(database)[0]["id"])
+# ##################################### #
+#  helper functions                     #
+# ##################################### #
+
+def run(cmd):
+    nodejs = "/usr/bin/nodejs "
+    return os.popen(nodejs + cmd).read()
 
 def getJSON(s):
     for x in re.findall('\w+:', s):
         s = re.sub(x, "\"" + re.split(':',x)[0] + "\":", s)
         s = s.replace("'", "\"")
-
     return json.loads(s)
+
+def switchUser(token):
+    global agile_conf
+    with open(agile_conf) as json_data_file:
+        conf = json.load(json_data_file)
+
+    conf["token"] = token
+    agile_conf = "'" + str(conf).replace("'", "\"") + "'"
+    print("User switched! Current user: " + getCurrentUser())
+
+def resetUserToken():
+    global agile_conf, main_conf
+    agile_conf = main_conf["agile_conf"]
+    print("User restored! Current user: " + getCurrentUser())
 
 # ##################################### #
 #  agile functions                      #
 # ##################################### #
+
+def getCurrentUser():
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --getCurrentUserInfo");
+    # print(debug)
+    # return debug
+    user = getJSON(debug)["id"]
+    # print(user)
+    return user
 
 def getDatabase(database):
     entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db"' + '}'
@@ -132,19 +159,8 @@ def evaluatePolicy(id, type, attr, method):
     return getJSON(debug)[0]
 
 # ##################################### #
-#  helper functions                     #
+#  policy functions                     #
 # ##################################### #
-
-def run(cmd):
-    nodejs = "/usr/bin/nodejs "
-    return os.popen(nodejs + cmd).read()
-
-def extractAttribute(input, attr):
-    identifiers = []
-    result = re.findall(attr + ':+\s.+', input)
-    for eid in result:
-        identifiers.append(eid.split('id: ')[1].split(',')[0])
-    return identifiers
 
 def evaluateDatabasePolicy(method):
     db = mysqlc.getDatabaseName()
@@ -219,6 +235,8 @@ def isKnownTable(token):
 
 def getTableFromQuery(query):
     for token in query.split():
+        # Remove special chracters from string
+        token = re.sub('[^\w\.]+', '', token)
         if isKnownTable(token):
             return token
 
@@ -230,6 +248,8 @@ def isKnownColumn(token, table):
 
 def getColumnFromQuery(query, table):
     for token in query.split():
+        # Remove special chracters from string
+        token = re.sub('[^\w\.]+', '', token)
         if isKnownColumn(token, table):
             return token
 
