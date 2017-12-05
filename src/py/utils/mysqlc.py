@@ -101,8 +101,16 @@ def getColumns(table):
 
 def executeQuery(query):
     global conn, cur
-    cur.execute(query)
-    return cur.fetchall()
+    try:
+        affected_count = cur.execute(query)
+        conn.commit()
+        if affected_count == 0:
+            raise Exception("Failed to insert values!")
+        else:
+            print("Successfully executed query!")
+            return cur.fetchall()
+    except Exception as e:
+        print(e)
 
 # ##################################### #
 #  export functions                     #
