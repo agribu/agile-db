@@ -3,5 +3,6 @@
     "port": "3307",
     "user": "root",
     "password": "letmein",
-    "name": "cdb_medical"
+    "name": "cdb_medical",
+    "policy_setting": "default"
 }

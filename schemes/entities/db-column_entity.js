@@ -11,6 +11,9 @@
     },
     "column": {
       "type": "string"
+    },
+    "policy_setting": {
+      "type": "string"
     }
   },
   "required": ["database", "table", "column"]

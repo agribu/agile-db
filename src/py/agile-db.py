@@ -67,13 +67,24 @@ def main():
 # ##################################### #
 #  database functions                   #
 # ##################################### #
+def setPolicyAttribute(eid, etype, polattr):
+    debug = helpers.run(agile
+        + " --conf " + agile_conf
+        + " --setEntityAttribute"
+        + " --id " + eid
+        + " --type " + etype
+        + " --attr " + "policy_setting"
+        + " --value " + polattr)
+    print(debug) # debug output
+
 def createDatabase():
     global db_ctr
     db_ctr += 1
     db_id = mysqlc.config["name"] + "!@!db"
+    print(db_id)
     debug = helpers.run(agile
         + " --conf " + agile_conf
-        + " --createEntity"
+        + " --createDatabase"
         + " --id " + db_id
         + " --type " + "'db'"
         + " --name " + mysqlc.config["name"])
@@ -104,21 +115,25 @@ def createTables():
             + " --database " + mysqlc.config["name"]
             + " --table " + table)
         print(debug)
+        setPolicyAttribute(db_tab_id, "'db-table'", mysqlc.config["policy_setting"])
 
-def createColumns(table, index, c):
+def createColumn(table, index, c):
+    # TODO both lines needed somewhere?
     columns = mysqlc.getColumns(table)
     debug = table + " : " + ','.join(columns)
 
-    # for c in columns:
+    col_id = index + "-" + mysqlc.config["name"] + "!@!db-column"
+
     debug = helpers.run(agile
         + " --conf " + agile_conf
         + " --createDatabaseColumn"
-        + " --id " + index + "-" + mysqlc.config["name"] + "!@!db-column"
+        + " --id " + col_id
         + " --type " + "'db-column'"
         + " --database " + mysqlc.config["name"]
         + " --table " + table
         + " --column " + c)
     print(debug)
+    setPolicyAttribute(col_id, "'db-column'", mysqlc.config["policy_setting"])
 
 def createAllColumns():
     global tab_ctr, col_ctr
@@ -128,7 +143,7 @@ def createAllColumns():
         tab_ctr += 1
         for c in mysqlc.getColumns(t):
             col_ctr += 1
-            createColumns(t, str(tab_ctr) + "." + str(col_ctr), c)
+            createColumn(t, str(tab_ctr) + "." + str(col_ctr), c)
         col_ctr = 0
 
 def deleteAll(typename):

@@ -393,6 +393,28 @@ module.exports = {
               lock: "isOwner"
             }]
           }
+        ],
+        "policy_setting": [
+          // the property can only be read by the user itself
+          {
+            op: "read",
+            locks: [{
+              lock: "hasType",
+              args: ["/user"]
+            }, {
+              lock: "isOwner"
+            }]
+          },
+          // the property can be set by the user itself
+          {
+            op: "write",
+            locks: [{
+              lock: "hasType",
+              args: ["/user"]
+            }, {
+              lock: "isOwner"
+            }]
+          }
         ]
       },
       "db-table": {
@@ -439,32 +461,8 @@ module.exports = {
               lock: "isOwner"
             }]
           }
-        ]
-      },
-      "db-table": {
-        "database": [
-          // the property can only be read by the user itself
-          {
-            op: "read",
-            locks: [{
-              lock: "hasType",
-              args: ["/user"]
-            }, {
-              lock: "isOwner"
-            }]
-          },
-          // the property can be set by the user itself
-          {
-            op: "write",
-            locks: [{
-              lock: "hasType",
-              args: ["/user"]
-            }, {
-              lock: "isOwner"
-            }]
-          }
         ],
-        "table": [
+        "policy_setting": [
           // the property can only be read by the user itself
           {
             op: "read",
@@ -533,6 +531,28 @@ module.exports = {
           }
         ],
         "column": [
+          // the property can only be read by the user itself
+          {
+            op: "read",
+            locks: [{
+              lock: "hasType",
+              args: ["/user"]
+            }, {
+              lock: "isOwner"
+            }]
+          },
+          // the property can be set by the user itself
+          {
+            op: "write",
+            locks: [{
+              lock: "hasType",
+              args: ["/user"]
+            }, {
+              lock: "isOwner"
+            }]
+          }
+        ],
+        "policy_setting": [
           // the property can only be read by the user itself
           {
             op: "read",
@@ -665,6 +685,9 @@ module.exports = {
       },
       "password": {
         "type": "string"
+      },
+      "policy_setting": {
+        "type": "string"
       }
     },
     "required": ["name"]
@@ -677,6 +700,9 @@ module.exports = {
         "type": "string"
       },
       "table": {
+        "type": "string"
+      },
+      "policy_setting": {
         "type": "string"
       }
     },
@@ -693,6 +719,9 @@ module.exports = {
         "type": "string"
       },
       "column": {
+        "type": "string"
+      },
+      "policy_setting": {
         "type": "string"
       }
     },

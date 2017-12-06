@@ -75,7 +75,7 @@ def createDatabasePolicies():
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
         entityid = helpers.getJSON(helpers.getDatabase(rules["database"]))[0]["id"]
-        helpers.setPolicy(entityid, 'db', 'name', policy)
+        helpers.setPolicy(entityid, 'db', 'policy_setting', policy)
 
 def createDatabaseTablePolicies():
     global example_db_tables
@@ -87,7 +87,7 @@ def createDatabaseTablePolicies():
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
         entityid = helpers.getJSON(helpers.getDatabaseTable(rules["database"], rules["table"]))[0]["id"]
-        helpers.setPolicy(entityid, 'db-table', 'table', policy)
+        helpers.setPolicy(entityid, 'db-table', 'policy_setting', policy)
 
 def createDatabaseColumnPolicies():
     global example_db_columns
@@ -99,7 +99,7 @@ def createDatabaseColumnPolicies():
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
         entityid = helpers.getJSON(helpers.getDatabaseColumn(rules["database"], rules["table"], rules["column"]))[0]["id"]
-        helpers.setPolicy(entityid, 'db-column', 'column', policy)
+        helpers.setPolicy(entityid, 'db-column', 'policy_setting', policy)
 
 def deleteDatabasePolicies():
     global example_db
@@ -111,7 +111,7 @@ def deleteDatabasePolicies():
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
         entityid = helpers.getJSON(helpers.getDatabase(rules["database"]))[0]["id"]
-        helpers.unsetPolicy(entityid, 'db', 'name', policy)
+        helpers.unsetPolicy(entityid, 'db', 'policy_setting', policy)
 
 def deleteDatabaseTablePolicies():
     global example_db_tables
@@ -123,7 +123,7 @@ def deleteDatabaseTablePolicies():
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
         entityid = helpers.getJSON(helpers.getDatabaseTable(rules["database"], rules["table"]))[0]["id"]
-        helpers.unsetPolicy(entityid, 'db-table', 'table', policy)
+        helpers.unsetPolicy(entityid, 'db-table', 'policy_setting', policy)
 
 def deleteDatabaseColumnPolicies():
     global example_db_columns
@@ -135,7 +135,7 @@ def deleteDatabaseColumnPolicies():
     for rules in array:
         policy = "'[" + ", ".join(str(x) for x in rules["policies"]).replace("'", "\"") + "]'"
         entityid = helpers.getJSON(helpers.getDatabaseColumn(rules["database"], rules["table"], rules["column"]))[0]["id"]
-        helpers.unsetPolicy(entityid, 'db-column', 'column', policy)
+        helpers.unsetPolicy(entityid, 'db-column', 'policy_setting', policy)
 
 # ##################################### #
 #  quick functions                      #

@@ -17,6 +17,9 @@
     },
     "password": {
       "type": "string"
+    },
+    "policy_setting": {
+      "type": "string"
     }
   },
   "required": ["name"]
