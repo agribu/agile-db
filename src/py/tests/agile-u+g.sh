@@ -1,15 +1,17 @@
 #!/bin/bash
-echo "## Create and delete example user entities"
+echo "## CREATE AND DELETE EXAMPLE USER ENTITIES"
 echo
 ./agile-u+g.py --conf conf/local_conf.json --createExampleUsers
 ./agile-u+g.py --conf conf/local_conf.json --deleteExampleUsers
+
 echo
-echo "## Create and delete example groups"
+echo "## CREATE AND DELETE EXAMPLE GROUPS"
 echo
 ./agile-u+g.py --conf conf/local_conf.json --createExampleGroups
 ./agile-u+g.py --conf conf/local_conf.json --deleteExampleGroups
+
 echo
-echo "## Create and delete example mappings user-group"
+echo "## CREATE AND DELETE EXAMPLE MAPPINGS USER-GROUP"
 echo
 ./agile-u+g.py --conf conf/local_conf.json --createExampleUsers
 ./agile-u+g.py --conf conf/local_conf.json --createExampleGroups
@@ -17,11 +19,13 @@ echo
 ./agile-u+g.py --conf conf/local_conf.json --deleteMappings
 ./agile-u+g.py --conf conf/local_conf.json --deleteExampleGroups
 ./agile-u+g.py --conf conf/local_conf.json --deleteExampleUsers
+
 echo
-echo "## Create and delete all entities"
+echo "## CREATE AND DELETE ALL ENTITIES"
 echo
 ./agile-u+g.py --conf conf/local_conf.json --createExamples
 ./agile-u+g.py --conf conf/local_conf.json --deleteExamples
+
 echo
-echo "## Success for agile-u+g.py"
+echo "## Success for agile-u+g.py!"
 echo
