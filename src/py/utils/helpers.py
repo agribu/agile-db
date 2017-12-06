@@ -9,6 +9,8 @@ agile_conf = None
 db_conf = None
 # Path to agile-sdk-handler
 agile = None
+# User token for switchUser function
+usertoken = None
 
 # ##################################### #
 #  main function                        #
@@ -47,13 +49,13 @@ def switchUser(token):
 
     if getCurrentUserInfo() == None:
         raise Exception("Invalid user token!")
-    else:
-        print("User switched! Current user: " + getCurrentUserInfo()["id"])
+    # else:
+    #     print("User switched! Current user: " + getCurrentUserInfo()["id"])
 
 def resetUserToken():
     global agile_conf, main_conf
     agile_conf = main_conf["agile_conf"]
-    print("User restored! Current user: " + getCurrentUserInfo()["id"])
+    # print("User restored! Current user: " + getCurrentUserInfo()["id"])
 
 # ##################################### #
 #  agile functions                      #
@@ -164,46 +166,51 @@ def unsetPolicy(id, type, attr, policy):
     # return debug
     print("Successfully removed policies from " + id + "!")
 
-def evaluatePolicy(id, type, attr, method):
+def evaluatePolicy(eid, etype, attr, method):
+    global usertoken
+    if usertoken != None: switchUser(usertoken)
     debug = run(agile
         + " --conf " + agile_conf
         + " --pdpEvaluate"
-        + " --entityid " + id
-        + " --type " + type
+        + " --entityid " + eid
+        + " --type " + etype
         + " --attr " + attr
         + " --method " + method);
-    # print(debug)
+    # print("PolicyEval for " + eid + "by user " + getCurrentUserInfo()["id"] + ":" + debug)
+    if usertoken != None: resetUserToken()
     return getJSON(debug)[0]
 
 # ##################################### #
 #  policy functions                     #
 # ##################################### #
 
-def evaluateDatabasePolicy(method):
-    db = mysqlc.getDatabaseName()
-    db_id = getJSON(getDatabase(db))[0]["id"]
-    return evaluatePolicy(db_id, 'db', 'name', method)
+def evaluateDatabasePolicy(method, database):
+    # db = mysqlc.getDatabaseName()
+    # db_id = getJSON(getDatabase(db))[0]["id"]
+    return evaluatePolicy(database, 'db', 'policy_setting', method)
 
-def canReadDatabase():
-    return evaluateDatabasePolicy('read')
+def canReadDatabase(database):
+    return evaluateDatabasePolicy('read', database)
 
-def canWriteDatabase():
-    return evaluateDatabasePolicy('write')
+def canWriteDatabase(database):
+    return evaluateDatabasePolicy('write', database)
 
 def evaluateDatabaseTablePolicy(database, table, method):
     table_id = getJSON(getDatabaseTable(database, table))[0]["id"]
-    return evaluatePolicy(table_id, 'db-table', 'table', method)
+    return evaluatePolicy(table_id, 'db-table', 'policy_setting', method)
 
 def readableTables(database):
     tables = []
     for t in mysqlc.getTables():
+        print(t)
         if evaluateDatabaseTablePolicy(database, t, 'read'):
             tables.append(t)
 
     return tables
 
 def canReadTable(database, table):
-    return table in readableTables(database)
+    # return table in readableTables(database)
+    return evaluateDatabaseTablePolicy(database, table, 'read')
 
 def writableTables(database):
     tables = []
@@ -214,11 +221,13 @@ def writableTables(database):
     return tables
 
 def canWriteTable(database, table):
-    return table in writableTables(database)
+    # return table in writableTables(database)
+    return evaluateDatabaseTablePolicy(database, table, 'write')
 
 def evaluateDatabaseColumnPolicy(database, table, column, method):
+    # print(database + ", " + table + ", " + column + ", " + method)
     column_id = getJSON(getDatabaseColumn(database, table, column))[0]["id"]
-    return evaluatePolicy(column_id, 'db-column', 'column', method)
+    return evaluatePolicy(column_id, 'db-column', 'policy_setting', method)
 
 def readableColumns(database, table):
     columns = []
@@ -229,7 +238,8 @@ def readableColumns(database, table):
     return columns
 
 def canReadColumn(database, table, column):
-    return column in readableColumns(database, table)
+    # return column in readableColumns(database, table)
+    return evaluateDatabaseColumnPolicy(database, table, column, 'read')
 
 def writableColumns(database, table):
     columns = []
@@ -240,7 +250,8 @@ def writableColumns(database, table):
     return columns
 
 def canWriteColumn(database, table, column):
-    return column in writableColumns(database, table)
+    # return column in writableColumns(database, table)
+    return evaluateDatabaseColumnPolicy(database, table, column, 'write')
 
 # ##################################### #
 #  SQL query syntax functions           #

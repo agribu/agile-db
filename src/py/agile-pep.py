@@ -20,10 +20,9 @@ def main():
     global main_conf, agile_conf, agile, db_conf
     parser = argparse.ArgumentParser(description='This python script includes functions to apply example policies to existing entities')
     parser.add_argument('--conf', help='Config file',required=True)
-    parser.add_argument('--checkQuery', help='Reads and applies example policies to databases', action='store_true', required=False)
-    parser.add_argument('--query', help='Reads and applies example policies to databases', required=False)
-    parser.add_argument('--token', help='Reads and applies example policies to databases', required=False)
-    parser.add_argument('--db', help='Reads and applies example policies to databases', required=False)
+    parser.add_argument('--query', help='Reads and applies example policies to databases', required=True)
+    parser.add_argument('--token', help='Reads and applies example policies to databases', required=True)
+    parser.add_argument('--db', help='Reads and applies example policies to databases', required=True)
     args = parser.parse_args()
 
     if args.conf:
@@ -36,51 +35,35 @@ def main():
         db_conf = main_conf["db_conf"]
         agile = main_conf["agile-sdk-handler"]
 
-    if args.checkQuery:
-        checkQuery(args.query, args.token, args.db)
+        initialize(args.query, args.token, args.db)
 
 # ##################################### #
 #  Database policy functions            #
 # ##################################### #
-
-def getCurrentToken():
-    debug = helpers.run(agile
-        + " --conf " + agile_conf
-        + " --pdpEvaluate"
-        + " --idmTokenGet ");
-    # print(debug)
-    return debug.strip()
-
-def setCurrentToken(token):
-    debug = helpers.run(agile
-        + " --conf " + agile_conf
-        + " --pdpEvaluate"
-        + " --idmTokenSet " + token);
-    # print(debug)
-    return debug.strip()
-
-def checkQuery(query, token, db_id):
+def initialize(query, token, db_id):
     # db_id = 'cdb_medical@localhost:3307'
 
-    # helpers.switchUser(token)
-    parseQuery(query, db_id)
-    # helpers.resetUserToken()
-
-def parseQuery(query, db_id):
     try:
         db_entity = helpers.getExistingDatabase(db_id)
 
         if db_entity != ['[]']:
-            # Build database config from existing entity
             db_entity = helpers.getJSON(db_entity)[0]
+            db_id = db_entity["id"]
+
+            # Build database config from existing entity
             db_entity.pop('id', None)
             db_entity.pop('type', None)
             db_entity.pop('owner', None)
             mysqlc.setConfig(db_entity)
 
             mysqlc.connect()
-            database = db_entity["name"];
-            evaluateQuery(db_id, query, database)
+            database = db_entity["name"]
+
+            # helpers.switchUser(token)
+            # helpers.switchUser(token)
+            evaluateQuery(db_id, query, database, token)
+            # helpers.resetUserToken()
+
             mysqlc.terminate()
         else:
             raise Exception("SQL operation failed!")
@@ -89,10 +72,14 @@ def parseQuery(query, db_id):
         mysqlc.terminate()
 
 
-def evaluateQuery(db_id, query, database):
+def evaluateQuery(db_id, query, database, token):
+    helpers.usertoken = token
     queryType = helpers.getMethod(helpers.getQueryType(query))
+    result = None
 
     print("Evaluating Query! Please stand by ...")
+
+    # Determine query type
     if queryType == 'read':
         database_cond = helpers.canReadDatabase
         table_cond = helpers.canReadTable
@@ -104,21 +91,34 @@ def evaluateQuery(db_id, query, database):
     else:
         raise Exception("Something is wrong with the SQL query type!")
 
-    if database_cond():
-        result = mysqlc.executeQuery(query)[0]
+    # policy evaluation
+    if database_cond(db_id):
+        # print("db_cond")
+        result = mysqlc.executeQuery(query)
+        result = result[0] if result != None else None
     else:
+        # print("before tab_cond")
         table = helpers.getTableFromQuery(query)
         table_cond = table_cond(database, table)
-        if table_cond | (helpers.hasWildcard(query) & table_cond):
-            print("table")
-            result = mysqlc.executeQuery(query)[0]
+        if table_cond:
+            # print("tab_cond")
+            result = mysqlc.executeQuery(query)
+            result = result[0] if result != None else None
         else:
-            column = helpers.getColumnFromQuery(query, table)
-            if column_cond(database, table, column):
-                print("col")
-                result = mysqlc.executeQuery(query)[0]
+            # print("else tab_cond")
+            if helpers.hasWildcard(query):
+                # print("wild")
+                raise Exception("Policy Evaluation for SQL query: Permission denied!")
             else:
-                raise Exception("SQL operation: Permission denied!")
+                # print("else wild")
+                column = helpers.getColumnFromQuery(query, table)
+                if column_cond(database, table, column):
+                    # print("col_cond")
+                    result = mysqlc.executeQuery(query)
+                    result = result[0] if result != None else None
+                else:
+                    # print("final else")
+                    raise Exception("Policy Evaluation for SQL query: Permission denied!")
 
     # Check for query result and print flattened output
     print(list(itertools.chain(result)) if result != None else "")

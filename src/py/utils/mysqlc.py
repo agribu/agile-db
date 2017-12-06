@@ -105,10 +105,11 @@ def executeQuery(query):
         affected_count = cur.execute(query)
         conn.commit()
         if affected_count == 0:
-            raise Exception("Failed to insert values!")
+            raise Exception("Failed to insert values or value is already set!")
         else:
             print("Successfully executed query!")
-            return cur.fetchall()
+            result = cur.fetchall()
+            return result if len(result) > 0 else None
     except Exception as e:
         print(e)
 
