@@ -5,23 +5,10 @@
         "column": "excessive_alcohol",
         "policies": [
           {
-              "op": "read",
-              "locks": [{
-                  "lock": "isOwner"
-              }]
-          },
-          {
-              "op": "read",
-              "locks": [{
-                  "lock": "attrEq",
-                  "args": ["user_name", "officer"]
-              }]
-          },
-          {
               "op": "write",
               "locks": [{
                 "lock": "attrEq",
-                "args": ["user_name", "officer"]
+                "args": ["user_name", "paramedic"]
               }]
           }
         ]

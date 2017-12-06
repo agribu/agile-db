@@ -6,76 +6,27 @@
             {
                 "op": "read",
                 "locks": [{
-                    "lock": "isOwner"
-                }]
-            },
-            {
-                "op": "read",
-                "locks": [{
                     "lock": "attrEq",
-                    "args": ["user_name", "doctor"]
+                    "args": ["user_name", "paramedic"]
                 }]
             },
             {
                 "op": "write",
                 "locks": [{
                     "lock": "isOwner"
-                }]
-            },
-            {
-                "op": "write",
-                "locks": [{
-                  "lock": "attrEq",
-                  "args": ["user_name", "doctor"]
                 }]
             }
         ]
-    }, {
+    },
+    {
         "database": "cdb_medical",
-        "table": "medical_information",
+        "table": "history_data",
         "policies": [
             {
                 "op": "read",
                 "locks": [{
-                    "lock": "isOwner"
-                }]
-            },
-            {
-                "op": "read",
-                "locks": [{
                     "lock": "attrEq",
-                    "args": ["user_name", "agile"]
-                }]
-            },
-            {
-                "op": "write",
-                "locks": [{
-                  "lock": "attrEq",
-                  "args": ["user_name", "doctor"]
-                }]
-            }
-        ]
-    }, {
-        "database": "cdb_medical",
-        "table": "emergency_contact",
-        "policies": [
-            {
-                "op": "read",
-                "locks": [{
-                    "lock": "isOwner"
-                }]
-            },
-            {
-                "op": "read",
-                "locks": [{
-                    "lock": "attrEq",
-                    "args": ["user_name", "agile"]
-                }]
-            },
-            {
-                "op": "write",
-                "locks": [{
-                    "lock": "isOwner"
+                    "args": ["user_name", "paramedic"]
                 }]
             }
         ]
