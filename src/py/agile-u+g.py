@@ -72,7 +72,7 @@ def addUser(username, authtype, role, password):
         + " --authtype " + authtype
         + " --role " + role
         + " --password " + password)
-    # print(debug)
+    print(debug)
     return debug
 
 def getUser(username, authtype):
@@ -81,7 +81,7 @@ def getUser(username, authtype):
         + " --getUser"
         + " --username " + username
         + " --authtype " + authtype)
-    # print(debug)
+    print(debug)
     return debug
 
 def deleteUser(username, authtype):
@@ -91,13 +91,6 @@ def deleteUser(username, authtype):
         + " --username " + username
         + " --authtype " + authtype)
     print(debug)
-    return debug
-
-def getCurrentUserInfo():
-    debug = helpers.run(agile
-        + " --conf " + agile_conf
-        + " --getCurrentUserInfo")
-    # print(debug)
     return debug
 
 # ##################################### #
@@ -190,7 +183,7 @@ def deleteExampleGroups():
         groups = json.load(json_data_file)
 
     for name in groups:
-        ownerid = helpers.getJSON(getCurrentUserInfo())["id"]
+        ownerid = helpers.getCurrentUserInfo()["id"]
         deleteGroup(ownerid, name)
 
 # ##################################### #
@@ -212,7 +205,7 @@ def createMappings():
                         user = str(getUser(x["user_name"], x["auth_type"]))
                         print(user)
                         entityid = helpers.getJSON(user)["id"]
-                        ownerid = helpers.getJSON(getCurrentUserInfo())["id"]
+                        ownerid = helpers.getCurrentUserInfo()["id"]
                         groupAddEntity(ownerid, group, entityid, 'user')
 
 def deleteMappings():
@@ -230,7 +223,7 @@ def deleteMappings():
                     for x in users[item]:
                         user = str(getUser(x["user_name"], x["auth_type"]))
                         entityid = helpers.getJSON(user)["id"]
-                        ownerid = helpers.getJSON(getCurrentUserInfo())["id"]
+                        ownerid = helpers.getCurrentUserInfo()["id"]
                         groupRemoveEntity(ownerid, group, entityid, 'user')
 
 # ##################################### #
