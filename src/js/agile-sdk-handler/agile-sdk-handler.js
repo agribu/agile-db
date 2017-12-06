@@ -108,6 +108,15 @@ function inputHandler() {
      *  database functions extends idm.entity
      * #######################################
      */
+     if (argv.createDatabase) {
+         var id, type, name;
+         if (typeof argv.id === 'string') { id = argv.id; }
+         if (typeof argv.id === 'number') { id = argv.id.toString(); }
+         if (typeof argv.type === 'string') { type = argv.type; }
+         if (typeof argv.name === 'string') { name = argv.name; }
+         proxy.createDatabase(id, type, name);
+     }
+
     if (argv.createDatabaseTable) {
         var id, type, database, table;
         if (typeof argv.id === 'string') { id = argv.id; }

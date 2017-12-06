@@ -118,16 +118,22 @@ Proxy.prototype.updateUserPassword = function(oldPassword, newPassword) {
  *  database functions extends idm.entity
  * #######################################
  */
-Proxy.prototype.createDatabaseColumn = function(id, type, database, table,  column) {
-    agile.idm.entity.create(id, type, {'database':database, 'table':table, 'column':column}).then(function(result) {
-        console.log(pretty(result));
-    });
+Proxy.prototype.createDatabase = function(id, type, name) {
+   agile.idm.entity.create(id, type, {'name':name}).then(function(result) {
+       console.log(pretty(result));
+   });
 }
 
 Proxy.prototype.createDatabaseTable = function(id, type, database, table) {
 	agile.idm.entity.create(id, type, {'database':database, 'table':table}).then(function(result) {
         console.log(pretty(result));
 	});
+}
+
+Proxy.prototype.createDatabaseColumn = function(id, type, database, table,  column) {
+    agile.idm.entity.create(id, type, {'database':database, 'table':table, 'column':column}).then(function(result) {
+        console.log(pretty(result));
+    });
 }
 
 /**
