@@ -12,13 +12,14 @@
                 "op": "read",
                 "locks": [{
                     "lock": "attrEq",
-                    "args": ["user_name", "agile"]
+                    "args": ["user_name", "doctor"]
                 }]
             },
             {
                 "op": "write",
                 "locks": [{
-                    "lock": "isOwner"
+                  "lock": "attrEq",
+                  "args": ["user_name", "doctor"]
                 }]
             }
         ]
