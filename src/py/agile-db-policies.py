@@ -104,6 +104,7 @@ def createDatabaseColumnPolicies():
 def deleteDatabasePolicies():
     global example_db
     array = None
+
     with open(example_db) as json_data_file:
         array = json.load(json_data_file)
 

@@ -136,13 +136,16 @@ def deleteAll(typename):
         + " --conf " + agile_conf
         + " --getEntityByType"
         + " --type " + typename)
-    for x in helpers.getJSON(result):
-        debug = helpers.run(agile
-            + " --conf " + agile_conf
-            + " --deleteEntity"
-            + " --id " + x["id"]
-            + " --type " + typename)
-        print(debug + " - " + x["id"])
+    if result != "":
+        for x in helpers.getJSON(result):
+            debug = helpers.run(agile
+                + " --conf " + agile_conf
+                + " --deleteEntity"
+                + " --id " + x["id"]
+                + " --type " + typename)
+            print(debug + " - " + x["id"])
+    else:
+        print("No entities to delete for type " + typename)
 
 # ##################################### #
 #  quick functions                      #
@@ -153,9 +156,9 @@ def dbInit():
     createAllColumns()
 
 def dbReset():
-    deleteAll("'db'")
-    deleteAll("'db-table'")
-    deleteAll("'db-column'")
+    deleteAll("db")
+    deleteAll("db-table")
+    deleteAll("db-column")
 
 # ##################################### #
 #  start                                #
