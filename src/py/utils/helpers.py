@@ -44,26 +44,43 @@ def switchUser(token):
 
     conf["token"] = token
     agile_conf = "'" + str(conf).replace("'", "\"") + "'"
-    print("User switched! Current user: " + getCurrentUser())
+
+    if getCurrentUserInfo() == None:
+        raise Exception("Invalid user token!")
+    else:
+        print("User switched! Current user: " + getCurrentUserInfo()["id"])
 
 def resetUserToken():
     global agile_conf, main_conf
     agile_conf = main_conf["agile_conf"]
-    print("User restored! Current user: " + getCurrentUser())
+    print("User restored! Current user: " + getCurrentUserInfo()["id"])
 
 # ##################################### #
 #  agile functions                      #
 # ##################################### #
 
-def getCurrentUser():
+def getCurrentUserInfo():
     debug = run(agile
         + " --conf " + agile_conf
         + " --getCurrentUserInfo");
-    # print(debug)
     # return debug
-    user = getJSON(debug)["id"]
-    # print(user)
-    return user
+    return None if (debug == "") else getJSON(debug)
+
+def getCurrentToken():
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --pdpEvaluate"
+        + " --idmTokenGet ");
+    # print(debug)
+    return debug.strip()
+
+def setCurrentToken(token):
+    debug = run(agile
+        + " --conf " + agile_conf
+        + " --pdpEvaluate"
+        + " --idmTokenSet " + token);
+    # print(debug)
+    return debug.strip()
 
 def getDatabase(database):
     entitytype = '{' + '"attributeType":' + '"type"' + ',' + '"attributeValue":'+ '"/db"' + '}'
