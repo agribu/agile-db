@@ -1,0 +1,3 @@
+select * from <table>
+select <column> from <table>
+update <table> set <column>=<newValue> where <column>=<oldValue>;
