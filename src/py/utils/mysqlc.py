@@ -112,6 +112,8 @@ def executeQuery(query):
             return result if len(result) > 0 else None
     except Exception as e:
         print(e)
+    # finally:
+    #     terminate()
 
 # ##################################### #
 #  export functions                     #
