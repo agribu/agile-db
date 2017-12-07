@@ -1,13 +1,14 @@
 #!/bin/bash
-export owner_token="1M65kYk6mzATHl7fghKiuypnsCZH7zS4u0taQzuA2cqlrSh8pqIf6ZyoAKJFA4Tv"
-export doctor_token="cZjIfZxd4OGU3G44Nca3HOYZDRrlv6Kds8s8BbSdPStu8uSWNJ2mnFBQ1cgrr8Ca"
-export paramed_token="lB9113eXEFWq3yHaQ1ftrc3xzoXBQGozKzpgeo6d9abYNhEVfDuvpkK3IXPLra2e"
+export owner_token="qDY2n12mDjWLqTDK2aRLJBY9iI4UkbsYOs1EXHDWMHuJuQ76Erlvoyz3wXEM0Dqp"
+export doctor_token="L9GV2k239Qz2SwmW9soptoJa58V4UJyi94qe2WDXxihQr3eFKoWjlbbb1TuhDbOA"
+export paramed_token="goi0FmqH3DQ9y2PDtJ4qNiWJ7rOVdUPe6lyY5qOBfb1C7ymgJmqxUgGm0SRXGfZQ"
 
 echo "# STARTING POLICY EVALUATION TESTS"
 echo
-./tests/policy-tests/policy_db.sh
-# ./tests/policy-tests/policy_db-tables.sh
-# ./tests/policy-tests/policy_db-columns.sh
+./tests/policy-tests/pos_eval_cumul_read.sh
+# ./tests/policy-tests/pos_eval_cumul_write.sh
+./tests/policy-tests/neg_eval_cumul_read.sh
+./tests/policy-tests/neg_eval_cumul_write.sh
 echo
 echo "# Success for agile-pep.py!"
 echo
