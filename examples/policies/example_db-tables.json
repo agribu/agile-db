@@ -4,13 +4,6 @@
         "table": "patient_data",
         "policies": [
             {
-                "op": "read",
-                "locks": [{
-                    "lock": "attrEq",
-                    "args": ["user_name", "paramedic"]
-                }]
-            },
-            {
                 "op": "write",
                 "locks": [{
                     "lock": "isOwner"
