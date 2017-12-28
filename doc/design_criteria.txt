@@ -1,0 +1,6 @@
+DESIGN CRITERIA
+DPEP implemented as seperated module that can be provided as Docker container
+Generic support of conntectable SQL databases
+Utilisation of the AGILE SDK
+Action Loggin (AGILE audit)
+Policies Evluation based on Usage Locks, User Token, ....
