@@ -1,0 +1,1 @@
+This folder contains the main configuration file including the defined entity and policy schemes that is used by agile-security. The scheme definitions can seperately be found in `PROJECT_DIR/schemes/entities`, `PROJECT_DIR/schemes/policies`.
