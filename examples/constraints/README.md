@@ -1,0 +1,1 @@
+This folder contains examples of how to pass attribute constraints to the AGILE SDK as a JSON file. This is for example used to demonstrate the `getEntityByMultiAttribute` method provided by `PROJECT_DIR/src/js/agile-sdk-handler`.
